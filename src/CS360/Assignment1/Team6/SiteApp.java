@@ -1,10 +1,14 @@
 package CS360.Assignment1.Team6;
 
+/**
+ * 
+ * @author 
+ *
+ */
 public class SiteApp {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		System.out.println("hello world!");
 	}
 
 }
