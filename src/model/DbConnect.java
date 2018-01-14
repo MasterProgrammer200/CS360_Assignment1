@@ -1,6 +1,8 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DbConnect {
 
@@ -24,7 +26,18 @@ public class DbConnect {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Cannot find the driver in the classpath!", e);
 		}
-
-		return null;
+		
+		Connection conn = null;
+		
+		// Create connection to RDS DB instance
+	    try {
+			conn = DriverManager.getConnection(jdbcUrl);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	    
+		return conn;
+		
 	}
+	
 }
