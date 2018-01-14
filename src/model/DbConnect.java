@@ -1,3 +1,9 @@
+/**
+ * 
+ * 
+ * 
+ * 
+ */
 package model;
 
 import java.sql.Connection;
@@ -5,29 +11,44 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DbConnect {
+	
+	///
+	/// private fields
+	///
+	private final String DB_NAME = "dbsitecollection";
+	private final String DB_USERNAME = "huntmj01";
+	private final String DB_PASSWORD = "IpFw12345!";
+	private final String DB_HOSTNAME = "huntmj01db.c7leo3jdf5jh.us-west-2.rds.amazonaws.com";
+	private final String DB_PORT = "3306";
+	
+	/**
+	 *
+	 * getRemoteConnection() creates and returns a connection to the AWS MySQL Database.
+	 * Make sure to close the connection when you are done!
+	 * 
+	 * @return conn : the connection to the AWS MySQL Database
+	 * 
+	 */
+	public Connection getRemoteConnection() {
+		
+		///
+		/// declare local variables 
+		///
+		Connection conn;	// holds connection to AWS MySQL Database
+		String jdbcUrl;		// holds jdbc connection string
 
-	public static Connection getRemoteConnection() {
-
-		// Read RDS connection information from the environment
-		String dbName = "dbsitecollection";
-		String userName = "huntmj01";
-		String password = "IpFw12345!";
-		String hostname = "huntmj01db.c7leo3jdf5jh.us-west-2.rds.amazonaws.com";
-		String port = "3306";
-
-		String jdbcUrl = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password="
-				+ password;
-
+		// initalize connection object as null
+		conn = null;
+		// compile to connection string
+		jdbcUrl = "jdbc:mysql://" + DB_HOSTNAME + ":" + DB_PORT + "/" + DB_NAME + "?user=" + DB_USERNAME 
+				+ "&password=" + DB_PASSWORD;
+		
 		// Load the JDBC driver
 		try {
-			System.out.println("Loading driver...");
 			Class.forName("com.mysql.jdbc.Driver");
-			System.out.println("Driver loaded!");
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Cannot find the driver in the classpath!", e);
 		}
-		
-		Connection conn = null;
 		
 		// Create connection to RDS DB instance
 	    try {
@@ -36,6 +57,7 @@ public class DbConnect {
 			e.printStackTrace();
 		}
 	    
+	    // return the connection
 		return conn;
 		
 	}
