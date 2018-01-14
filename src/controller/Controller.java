@@ -12,6 +12,7 @@
 //
 package controller;
 
+import model.DbConnect;
 import model.HistoryModel;
 import model.SiteModel;
 import view.SiteView;
@@ -21,15 +22,19 @@ public class Controller {
 	private SiteModel site;  
 	private HistoryModel history;
 	private SiteView view;
+	private DbConnect db;
 	
 	// where the magic happens
 	public static void main(String[] args) {
+		Controller c = new Controller(null, null);
 		
 	}
 	
 	// call model AND view
 	// constructor
 	public Controller(SiteModel site, SiteView view) {
+		db = new DbConnect();
+		db.getRemoteConnection();
 		this.site = site;
 		this.view = view;
 	}
@@ -42,6 +47,7 @@ public class Controller {
 	
 	// READ. browse a site if you want to get 1 site return 'only one site'.
 	public SiteModel getSite(int siteNum) {
+		
 		return null;
 	}
 	// READ. browse sites. return all the 'sites' which is an array of site objects
