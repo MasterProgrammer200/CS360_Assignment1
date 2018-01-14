@@ -23,7 +23,7 @@ public class Controller {
 	private SiteView view;
 	
 	// where the magic happens
-	public static void main() {
+	public static void main(String[] args) {
 		
 	}
 	
