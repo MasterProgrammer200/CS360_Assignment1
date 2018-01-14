@@ -110,8 +110,8 @@ public class Controller {
 			result.setName(rs.getString(COLUMN_NAME));
 			result.setShortDesc(rs.getString(COLUMN_SHORT_DESC));
 			result.setLoc(rs.getString(COLUMN_LOCATION));
-			result.setLat(rs.getLong(COLUMN_LATITUDE));
-			result.setLng(rs.getLong(COLUMN_LONGITUDE));
+			result.setLat(rs.getBigDecimal(COLUMN_LATITUDE));
+			result.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
 
 		} catch (SQLException ex) {
 			

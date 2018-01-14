@@ -10,6 +10,8 @@
  **/
 package model;
 
+import java.math.BigDecimal;
+
 public class SiteModel {
 	
 	///
@@ -21,8 +23,8 @@ public class SiteModel {
 	private String name;		// holds the name of the site
 	private String shortDesc;	// holds a short description of the site
 	private String loc;			// holds the location of the site
-	private long lat;			// holds the latitude of the site
-	private long lng;			// holds the longitude of the site
+	private BigDecimal lat;			// holds the latitude of the site
+	private BigDecimal lng;			// holds the longitude of the site
 	
 	///
 	/// getters and setters
@@ -58,16 +60,16 @@ public class SiteModel {
 	public void setLoc(String loc) {
 		this.loc = loc;
 	}
-	public long getLat() {
+	public BigDecimal getLat() {
 		return lat;
 	}
-	public void setLat(long lat) {
+	public void setLat(BigDecimal lat) {
 		this.lat = lat;
 	}
-	public long getLng() {
+	public BigDecimal getLng() {
 		return lng;
 	}
-	public void setLng(long lng) {
+	public void setLng(BigDecimal lng) {
 		this.lng = lng;
 	}
 	
