@@ -22,7 +22,7 @@ import javax.swing.JTextPane;
  * @author becknd01
  *
  */
-public class HomeView {
+public class SiteView {
 
 	// Constants
 	private final int WIDTH = 500;
@@ -76,7 +76,7 @@ public class HomeView {
 	/**
 	 * The constructor for the HomeView Class.
 	 */
-	public HomeView(){
+	public SiteView(){
 		
 	}//end HomeView Constructor					
 	
