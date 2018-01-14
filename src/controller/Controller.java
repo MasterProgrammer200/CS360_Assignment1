@@ -12,35 +12,46 @@
 //
 package controller;
 
+import model.HistoryModel;
+import model.SiteModel;
+import view.SiteView;
+
 public class Controller {
-	private Site model;  
-	private History model;
-	private SiteGUI view;
+	
+	private SiteModel site;  
+	private HistoryModel history;
+	private SiteView view;
+	
+	// where the magic happens
+	public static void main() {
+		
+	}
 	
 	// call model AND view
-	public Controller(Site model, SiteGUI view) {
-		this.model = model;
+	// constructor
+	public Controller(SiteModel site, SiteView view) {
+		this.site = site;
 		this.view = view;
 	}
 	
 	/* CRUD operation for Site */
 	// CREATE. add a site. view calls createSite from the controller
-	public void createSite(Sites) {
+	public void createSite(SiteModel s) {
 		
 	}
 	
 	// READ. browse a site if you want to get 1 site return 'only one site'.
-	public Site getSite(int SiteNum) {
-		return model.getSiteNum();
+	public SiteModel getSite(int siteNum) {
+		return null;
 	}
 	// READ. browse sites. return all the 'sites' which is an array of site objects
-	public Site[] getSites() {
-		return model;
+	public SiteModel[] getSites() {
+		return null;
 	}
 	
 	// UPDATE. edit and change a site. 
-	public void updateSite(Sites, int SiteNum) {
-		view.printDetails(model.getSites(), model.getSite(SiteNum));
+	public void updateSite(SiteModel s, int SiteNum) {
+		//view.printDetails(model.getSites(), model.getSite(SiteNum));
 	}
 	
 	// DELETE. delete a site.
@@ -50,19 +61,19 @@ public class Controller {
 	
 	/* CRUD operation for History */
 	// CREATE. add a history item.
-	public void createHistoryItem(History h) {
+	public void createHistoryItem(HistoryModel h) {
 		
 	}
 	
 	// READ. browse history items. we can get all of history items at a time.
-	public History[] getHistoryItems() {
-		History[] h = {a, b, c, ..., g};
-		return h;
+	public HistoryModel[] getHistoryItems() {
+		//History[] h = {a, b, c, ..., g};
+		return null;
 	}
 	
 	// READ. browse a single history item.
-	public History getHistoryItem() {
-		return HistoryItem;
+	public HistoryModel getHistoryItem() {
+		return null;
 	}
 	
 	// we do not need to UPDATE because we should update once a while. 
