@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import model.DbConnect;
 import model.HistoryModel;
@@ -50,8 +51,8 @@ public class Controller {
 	// where the magic happens
 	public static void main(String[] args) {
 		Controller c = new Controller(null, null);
-		SiteModel s = c.getSite(100);
-		System.out.println(s);
+		ArrayList<SiteModel> s = c.getSites();
+		System.out.println(s.toString());
 	}
 
 	// call model AND view
@@ -75,13 +76,13 @@ public class Controller {
 		///
 		/// declare local variables
 		///
-		
-		SiteModel result;		// holds the site retrieved from the database
-		Connection conn;		// holds the connection to the database
-		String query;			// holds query string
-		PreparedStatement stmt;	// holds Prepared Statement to execute on the database
-		ResultSet rs;			// holds the result from the database
-		
+
+		SiteModel result; // holds the site retrieved from the database
+		Connection conn; // holds the connection to the database
+		String query; // holds query string
+		PreparedStatement stmt; // holds Prepared Statement to execute on the database
+		ResultSet rs; // holds the result from the database
+
 		// initialize variables
 		result = new SiteModel();
 		conn = null;
@@ -90,20 +91,20 @@ public class Controller {
 		rs = null;
 
 		try {
-			
+
 			// connect to the database
 			conn = db.getRemoteConnection();
-			
+
 			// concatenate select query
 			query = "SELECT * FROM " + TABLE_SITE + " WHERE " + COLUMN_SITE_NUM + " = " + " ?;";
-			
+
 			// initialize the prepare statement, execute it, and
 			// store the result
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, siteNum);
 			rs = stmt.executeQuery();
 			rs.next();
-			
+
 			// store the result from the database in the site object
 			result.setId(rs.getInt(COLUMN_ID));
 			result.setNum(rs.getInt(COLUMN_SITE_NUM));
@@ -114,14 +115,14 @@ public class Controller {
 			result.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
 
 		} catch (SQLException ex) {
-			
+
 			// display any errors
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("VendorError: " + ex.getErrorCode());
-			
+
 		} finally {
-			
+
 			// try to close the connection to the database
 			if (conn != null) {
 				try {
@@ -131,14 +132,83 @@ public class Controller {
 				}
 			}
 		}
-		
+
 		// return the site retrieved from the database
 		return result;
 	}
 
 	// READ. browse sites. return all the 'sites' which is an array of site objects
-	public SiteModel[] getSites() {
-		return null;
+	public ArrayList<SiteModel> getSites() {
+		
+		///
+		/// declare local variables
+		///
+		ArrayList<SiteModel> result; // holds the site retrieved from the database
+		Connection conn; // holds the connection to the database
+		String query; // holds query string
+		PreparedStatement stmt; // holds Prepared Statement to execute on the database
+		ResultSet rs; // holds the result from the database
+
+		// initialize variables
+		result = new ArrayList<SiteModel>();
+		conn = null;
+		query = null;
+		stmt = null;
+		rs = null;
+
+		try {
+
+			// connect to the database
+			conn = db.getRemoteConnection();
+
+			// concatenate select query
+			query = "SELECT * FROM " + TABLE_SITE;
+
+			// initialize the prepare statement, execute it, and
+			// store the result
+			stmt = conn.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			// loop through each object returned from the database
+			while (rs.next()) {
+
+				SiteModel s = new SiteModel();
+
+				// store the result from the database in the site object
+				s.setId(rs.getInt(COLUMN_ID));
+				s.setNum(rs.getInt(COLUMN_SITE_NUM));
+				s.setName(rs.getString(COLUMN_NAME));
+				s.setShortDesc(rs.getString(COLUMN_SHORT_DESC));
+				s.setLoc(rs.getString(COLUMN_LOCATION));
+				s.setLat(rs.getBigDecimal(COLUMN_LATITUDE));
+				s.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
+				
+				// add the site to the list
+				result.add(s);
+
+			}
+
+		} catch (SQLException ex) {
+
+			// display any errors
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+
+		} finally {
+
+			// try to close the connection to the database
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+		}
+
+		// return the site retrieved from the database
+		return result;
 	}
 
 	// UPDATE. edit and change a site.
