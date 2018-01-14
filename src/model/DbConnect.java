@@ -16,8 +16,8 @@ public class DbConnect {
 	/// private fields
 	///
 	private final String DB_NAME = "dbsitecollection";
-	private final String DB_USERNAME = "huntmj01";
-	private final String DB_PASSWORD = "IpFw12345!";
+	private final String DB_USERNAME = "java";
+	private final String DB_PASSWORD = "TeMp12345!";
 	private final String DB_HOSTNAME = "huntmj01db.c7leo3jdf5jh.us-west-2.rds.amazonaws.com";
 	private final String DB_PORT = "3306";
 	
