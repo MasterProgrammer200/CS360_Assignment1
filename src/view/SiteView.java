@@ -1,21 +1,24 @@
+/** 
+ * 
+ * Name: 		Nicholas Becker
+ * Class:		CS360-01 Software Engineering
+ * Instructor: 	eProf Sedlmeyer
+ * Project:		Assignment 1: Welcome to the Real World
+ * Date:		01/13/18
+ * Due:			01/17/18
+ * 
+ **/
 package view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-/* Name: 		Nicholas Becker
- * Class:		CS360-01 Software Engineering
- * Instructor: 	eProf Sedlmeyer
- * Project:		Assignment 1: Welcome to the Real World
- * Date:		01/13/18
- * Due:			01/17/18
- */
+
 /**
  * The purpose of the HomeView
  * 

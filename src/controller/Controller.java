@@ -1,3 +1,13 @@
+/** 
+ * 
+ * Name: 		Haemin Ryu
+ * Class:		CS360-01 Software Engineering
+ * Instructor: 	eProf Sedlmeyer
+ * Project:		Assignment 1: Welcome to the Real World
+ * Date:		01/13/18
+ * Due:			01/17/18
+ * 
+ **/
 //Controller.java
 //
 package controller;

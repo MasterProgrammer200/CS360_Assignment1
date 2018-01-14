@@ -1,8 +1,13 @@
-/**
+/** 
  * 
+ * Name: 		Matthew Hunt
+ * Class:		CS360-01 Software Engineering
+ * Instructor: 	eProf Sedlmeyer
+ * Project:		Assignment 1: Welcome to the Real World
+ * Date:		01/14/18
+ * Due:			01/17/18
  * 
- * 
- */
+ **/
 package model;
 
 public class SiteModel {
