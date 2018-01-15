@@ -78,8 +78,76 @@ public class Controller {
 
 	/* CRUD operation for Site */
 	// CREATE. add a site. view calls createSite from the controller
-	public void createSite(SiteModel s) {
+	public boolean createSite(SiteModel s) {
 
+		///
+		/// declare local variables
+		///
+
+		boolean result; // holds whether the site was successfully created
+		Connection conn; // holds the connection to the database
+		String query; // holds query string
+		PreparedStatement stmt; // holds Prepared Statement to execute on the database
+		ResultSet rs; // holds the result from the database
+		
+		// initialize variables
+		result = false;
+		conn = null;
+		query = null;
+		stmt = null;
+		rs = null;
+
+		try {
+
+			// connect to the database
+			conn = db.getRemoteConnection();
+
+			// concatenate select query
+			query = "INSERT INTO " + TABLE_SITE + " (" 
+					+ COLUMN_SITE_NUM + ", " 
+					+ COLUMN_NAME + ", " 
+					+ COLUMN_SHORT_DESC + ", "  
+					+ COLUMN_LOCATION + ", " 
+					+ COLUMN_LATITUDE + ", " 
+					+ COLUMN_LONGITUDE + ") "
+					+ "VALUES(?, ?, ?, ?, ?, ?);";
+
+			// initialize the prepare statement, execute it, and
+			// store the result
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, s.getNum());
+			stmt.setString(2, s.getName());
+			stmt.setString(3, s.getShortDesc());
+			stmt.setString(4, s.getLoc());
+			stmt.setBigDecimal(5, s.getLat());
+			stmt.setBigDecimal(6, s.getLng());
+			int count = stmt.executeUpdate();
+			
+			// check if insurt was successful 
+			if (count > 0) {
+				result = true;
+			}
+
+		} catch (SQLException ex) {
+
+			// display any errors
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+
+		} finally {
+
+			// try to close the connection to the database
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+		}
+		
+		return result;
 	}
 
 	// READ. browse a site if you want to get 1 site return 'only one site'.
