@@ -364,8 +364,63 @@ public class Controller {
 		}
 	}
 
-	public void deleteSite(int num) {
-	
+	public boolean deleteSite(int siteNum) {
+		///
+		/// declare local variables
+		///
+
+		boolean result; // holds whether the site was successfully created
+		Connection conn; // holds the connection to the database
+		String query; // holds query string
+		PreparedStatement stmt; // holds Prepared Statement to execute on the database
+		ResultSet rs; // holds the result from the database
+
+		// initialize variables
+		result = false;
+		conn = null;
+		query = null;
+		stmt = null;
+		rs = null;
+
+		try {
+
+			// connect to the database
+			conn = db.getRemoteConnection();
+
+			// concatenate select query
+			query = "DELETE FROM " + TABLE_SITE +  "WHERE " + COLUMN_SITE_NUM + " = ?;";
+
+			// initialize the prepare statement, execute it, and
+			// store the result
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, siteNum);
+			int count = stmt.executeUpdate();
+
+			// check if insert was successful
+			if (count > 0) {
+				result = true;
+			}
+
+		} catch (SQLException ex) {
+
+			// display any errors
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+
+		} finally {
+
+			// try to close the connection to the database
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/* CRUD operation for History */
