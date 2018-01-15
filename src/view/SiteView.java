@@ -1,3 +1,5 @@
+
+
 /*
  * 
  * Name: 		Nicholas Becker
@@ -11,17 +13,26 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.ScrollPane;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -55,6 +66,7 @@ public class SiteView extends JFrame{
 	private JTextField siteLattitudeTextField;		//
 	private JTextField siteLocationTextField;		//
 	private JTextField siteNameTextField;			//
+	JScrollPane siteDescriptionScrollPane;			//
 	private JTextArea siteDescriptionTextArea;		//
 	 
 	// BuildMapControlPanel Fields
@@ -70,35 +82,44 @@ public class SiteView extends JFrame{
 	private JPanel mapPanel;						//
 	 
 	// BuildToolBarPanel Fields
-	private JPanel toolBarPanel;					//
+	private JPanel toolbarPanel;					//
 	private JButton addButton;						//
 	private JButton deleteButton;                   //
 	private JButton editButton;                     //
 	private JButton viewButton;                     //
+	private JPanel buttonJPanel;					//
+	private JPanel buttonJPanel0;                   //
+	private JPanel buttonJPanel1;                   //
+	private JPanel buttonJPanel2;                   //
+	private JPanel buttonJPanel3;                   //
+	private JScrollPane siteSelectorScrollPane;		//
+	private JTextArea siteSelectorList;			//
 	                                                
 	// BuildMenuBarPanel Fields
 	private JMenuBar menuBar;						//
+
 	
 	// BuildTitleBarPanel Fields
 	private JPanel titleBarPanel;					//
-	private JLabel titleLabel;						//
+	private JLabel titleBarJLabel;					//
 	 
 	 // General
 	private JButtonListener JBL;					//
-	
 
-		
-	
+    
 	
 	// Constructor
 	/**
 	 * The constructor for the HomeView Class Creates and configures the Site Manager Application's GUI.
 	 */
 	public SiteView() {
+		
 		// Configure Window
-		setSize(WIDTH, HEIGHT);
+		// setSize(WIDTH, HEIGHT);
+		setTitle("SJRWI Site Manager Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
+		setResizable(false);
 		
 		// Instantiate Event Listener
 		JBL = new JButtonListener();
@@ -106,7 +127,7 @@ public class SiteView extends JFrame{
 		// Build All JPanels
 		BuildDisplayPanel();		
 		BuildMapControlPanel(JBL);
-		BuildMapPanel(JBL); 		
+		BuildMapPanel(); 		
 		BuildToolBarPanel(JBL); 	
 		BuildMenuBar(JBL);			
 		BuildTitleBarPanel();		
@@ -115,31 +136,29 @@ public class SiteView extends JFrame{
 		add(displayPanel, BorderLayout.WEST);
 		add(mapControlPanel, BorderLayout.EAST);
 		add(mapPanel, BorderLayout.CENTER);
-		add(toolBarPanel, BorderLayout.SOUTH);
+		add(toolbarPanel, BorderLayout.SOUTH);
 		add(titleBarPanel, BorderLayout.NORTH);
 		
 		// Display Window
+		pack();
 		setVisible(true);
 		
 	}//end HomeView Constructor					
 	
 
-
-	
-
-
-
-	// 
+	 
 	/**
-	 * BuildDisplayPanel configures the JPanel that presents site data. Upper right panel.
-	 * 
-	 * @param JBL
-	 * 		The ActionListener for this JPanel.
+	 * BuildDisplayPanel configures the JPanel titled" site information". 
 	 */
 	private void BuildDisplayPanel(){
 		
-		// Create JPanel.
+		// Local Variables
+		int tFSize = 15; 
+		boolean editable = false;
+		
+		// Create and Configure JPanels.
 		displayPanel = new JPanel(); 
+		displayPanel.setBorder(BorderFactory.createTitledBorder("Site Information"));
 		displayPanelTop = new JPanel();
 		displayPanelBottom = new JPanel();
 		JLabelPanel = new JPanel();
@@ -147,10 +166,12 @@ public class SiteView extends JFrame{
 		
 		// Configure Layout Managers
 		displayPanel.setLayout(new GridLayout(2, 1));
+		displayPanel.setPreferredSize(new Dimension(250, 250)); //(w, h)
 		displayPanelTop.setLayout(new GridLayout(1, 2));
 		displayPanelBottom.setLayout(new GridLayout(1, 1));
-		JLabelPanel.setLayout(new FlowLayout());
-		JTextFieldPanel.setLayout(new FlowLayout());
+		JLabelPanel.setLayout(new GridLayout(6, 1));
+		JTextFieldPanel.setLayout(new GridLayout(6, 1));
+		
 		
 		// Create JLabels.
 		siteIDNumberLabel = new JLabel("Site ID#: ");			
@@ -160,15 +181,33 @@ public class SiteView extends JFrame{
 		siteNameLabel = new JLabel("Site Name: ");				
 		siteDescriptionLabel = new JLabel("Site Description: ");	
 		
-		// Create JTextFields.
-		siteIDNumberTextField = new JTextField();		
-		siteLongitudeTextField = new JTextField();		
-		siteLattitudeTextField = new JTextField();		
-		siteLocationTextField	= new JTextField();			
-		siteNameTextField = new JTextField();			
+		// Set Tool Tips for JLabels
+		siteIDNumberLabel.setToolTipText("Coming Soon!");
+		siteLongitudeLabel.setToolTipText("Coming Soon!");
+		siteLattitudeLabel.setToolTipText("Coming Soon!");
+		siteLocationLabel.setToolTipText("Coming Soon!");
+		siteNameLabel.setToolTipText("Coming Soon!");
+		siteDescriptionLabel.setToolTipText("Coming Soon!");
 		
-		// Create and Configure JTextArea
+		// Create and Configure JTextFields.
+		siteIDNumberTextField = new JTextField(tFSize);		
+		siteIDNumberTextField.setEditable(editable);
+		siteLongitudeTextField = new JTextField(tFSize);	
+		siteLongitudeTextField.setEditable(editable);
+		siteLattitudeTextField = new JTextField(tFSize);
+		siteLattitudeTextField.setEditable(editable);
+		siteLocationTextField	= new JTextField(tFSize);		
+		siteLocationTextField.setEditable(editable);
+		siteNameTextField = new JTextField(tFSize);		
+		siteNameTextField.setEditable(editable);
+		
+		// Create and Configure JTextArea and JScrollPane
 		siteDescriptionTextArea = new JTextArea();	
+		siteDescriptionScrollPane = new JScrollPane(siteDescriptionTextArea);
+		siteDescriptionTextArea.setLineWrap(true);
+		siteDescriptionTextArea.setWrapStyleWord(true);
+		siteDescriptionTextArea.setEditable(editable);
+		siteDescriptionTextArea.setEditable(editable);
 		
 		// Add Components to JLabelPanel.
 		JLabelPanel.add(siteIDNumberLabel);
@@ -178,7 +217,7 @@ public class SiteView extends JFrame{
 		JLabelPanel.add(siteLattitudeLabel);
 		JLabelPanel.add(siteDescriptionLabel);
 		
-		// Add Components to JLabelPanel
+		// Add Components to JTextFieldPanel
 		JTextFieldPanel.add(siteIDNumberTextField);
 		JTextFieldPanel.add(siteNameTextField);
 		JTextFieldPanel.add(siteLocationTextField);
@@ -190,7 +229,11 @@ public class SiteView extends JFrame{
 		displayPanelTop.add(JTextFieldPanel);
 		
 		// Add Component to displayBottomPanel;
-		displayPanelBottom.add(siteDescriptionTextArea);
+		displayPanelBottom.add(siteDescriptionScrollPane);
+		
+		// Add Top and Bottom Panel to displayPanel
+		displayPanel.add(displayPanelTop);
+		displayPanel.add(displayPanelBottom);
 		
 	}//end BuildDisplayPanel						
 	 
@@ -198,18 +241,29 @@ public class SiteView extends JFrame{
 	
 	private void BuildMapControlPanel(JButtonListener JBL) {
 		
-		
+		// Create and Configure mapControlPanel
+		mapControlPanel = new JPanel();
+		mapControlPanel.setBorder(BorderFactory.createTitledBorder("Map Controls"));
+		mapControlPanel.setPreferredSize(new Dimension(150,250));
+		mapControlPanel.add(new JLabel("Coming Soon!"));
+
 	}//end BuildMapControlPanel
 	
 	
 
 	/**
-	 * BuildMapPanel configures the JPanel that provides the GUIs map. Upper left panel.
+	 * BuildMapPanel configures the JPanel that provides the GUIs map. 
 	 * 
 	 * @param JBL
 	 * 		The ActionListener for this JPanel.
 	 */
-	private void BuildMapPanel(JButtonListener JBL){
+	private void BuildMapPanel(){
+		
+		// Create and Configure mapPanel
+		mapPanel = new JPanel();
+		mapPanel.setBorder(BorderFactory.createTitledBorder("Site Distribution Map"));
+		mapPanel.setPreferredSize(new Dimension(250,250));
+		mapPanel.add(new JLabel("Coming Soon!"));
 		
 	}//end BuildMapPanel
 	
@@ -218,10 +272,69 @@ public class SiteView extends JFrame{
 	/**
 	 * BuildToolBarPanel configures the JPanel that provide the GUIs display selector and buttons. Bottom center panel.
 	 * 
-	 * @param JBL
+	 * @param jBL
 	 * 		The ActionListener for this JPanel.
 	 */
-	private void BuildToolBarPanel(JButtonListener JBL){
+	private void BuildToolBarPanel(JButtonListener jBL){
+		
+		// Local Variable
+		boolean editable = false;
+		
+		// Create and Configure toolBarPanel
+		toolbarPanel = new JPanel();
+		toolbarPanel.setLayout(new GridLayout(1,2));
+		toolbarPanel.setBorder(BorderFactory.createTitledBorder("Dashboard Toolbar"));
+		toolbarPanel.setPreferredSize(new Dimension(250,100)); // w, h
+		
+		// Create and Configure Button JPanels
+		buttonJPanel = new JPanel();
+		buttonJPanel0 = new JPanel();
+		buttonJPanel1 = new JPanel();
+		buttonJPanel2 = new JPanel();
+		buttonJPanel3 = new JPanel();
+		
+		// Create JButtons
+		JButton addButton = new JButton("Add");						
+		JButton deleteButton = new JButton("Delete");                   
+		JButton editButton = new JButton("Edit");                     
+		JButton viewButton = new JButton("View"); 
+		
+		// Add ActionListener to JButtons
+		addButton.addActionListener(jBL);
+		deleteButton.addActionListener(jBL);
+		editButton.addActionListener(jBL);
+		viewButton.addActionListener(jBL); 
+		
+		// Create JButton Tool-tips
+		addButton.setToolTipText("Coming Soon!");
+		deleteButton.setToolTipText("Coming Soon!");
+		editButton.setToolTipText("Coming Soon!");
+		viewButton.setToolTipText("Coming Soon!");
+		
+		// Add JButtons to their Respective Sub-panels
+		buttonJPanel0.add(addButton);
+		buttonJPanel1.add(deleteButton);
+		buttonJPanel2.add(editButton);
+		buttonJPanel3.add(viewButton);
+		
+		// Add JButton Sub-panels to buttonJPanel
+		buttonJPanel.add(buttonJPanel0);
+		buttonJPanel.add(buttonJPanel1);
+		buttonJPanel.add(buttonJPanel2);
+		buttonJPanel.add(buttonJPanel3);
+		
+		// Create and Configure JTextArea and JScrollPane
+		siteSelectorList = new JTextArea();	
+		siteSelectorScrollPane = new JScrollPane(siteDescriptionTextArea);
+
+		
+		// Add actionListener
+		
+		
+		// Add Panels to toolbarPanel
+		toolbarPanel.add(siteSelectorScrollPane);
+		toolbarPanel.add(buttonJPanel);
+		
 		
 	}//end BuildToolBarPanel
 	
@@ -244,6 +357,14 @@ public class SiteView extends JFrame{
 	 */
 	private void BuildTitleBarPanel(){
 		
+		titleBarPanel = new JPanel();
+		titleBarPanel.setBorder(BorderFactory.createTitledBorder(""));
+		titleBarPanel.setPreferredSize(new Dimension(250, 50));
+		titleBarJLabel = new JLabel("St. Joseph River Watershed Initiative");
+		titleBarJLabel.setFont(new Font("Serif",Font.BOLD, 20));
+		titleBarJLabel.setForeground(Color.BLUE);
+		titleBarPanel.add(titleBarJLabel);
+		
 	}//end BuildTitleBarPanel
 	
 	
@@ -264,30 +385,14 @@ public class SiteView extends JFrame{
 	}//end ActionListener 
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * The purpose of this method is to instantiate the SiteViewTest class.
+	 * 
+	 * @param args
+	 * 		Not Used.
+	 */
+	public static void main(String[] args) {
+		
+		new SiteView();
+	}
 }
