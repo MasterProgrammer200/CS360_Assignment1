@@ -129,19 +129,9 @@ public class Controller {
 			}
 
 		} catch (SQLException ex) {
-
 			db.printSQLError(ex);
-
 		} finally {
-
-			// try to close the connection to the database
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException ignore) {
-
-				}
-			}
+			db.closeConnection(conn);
 		}
 		
 		return result;
@@ -192,19 +182,9 @@ public class Controller {
 			result.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
 
 		} catch (SQLException ex) {
-
 			db.printSQLError(ex);
-
 		} finally {
-
-			// try to close the connection to the database
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException ignore) {
-
-				}
-			}
+			db.closeConnection(conn);
 		}
 
 		// return the site retrieved from the database
@@ -263,19 +243,9 @@ public class Controller {
 			}
 
 		} catch (SQLException ex) {
-
 			db.printSQLError(ex);
-
 		} finally {
-
-			// try to close the connection to the database
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException ignore) {
-
-				}
-			}
+			db.closeConnection(conn);
 		}
 
 		// return the site retrieved from the database
@@ -336,19 +306,9 @@ public class Controller {
 			result.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
 
 		} catch (SQLException ex) {
-
 			db.printSQLError(ex);
-
 		} finally {
-
-			// try to close the connection to the database
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException ignore) {
-
-				}
-			}
+			db.closeConnection(conn);
 		}
 	}
 
@@ -390,19 +350,9 @@ public class Controller {
 			}
 
 		} catch (SQLException ex) {
-			
 			db.printSQLError(ex);
-
 		} finally {
-
-			// try to close the connection to the database
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException ignore) {
-
-				}
-			}
+			db.closeConnection(conn);
 		}
 
 		return result;

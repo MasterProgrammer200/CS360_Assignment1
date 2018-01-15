@@ -81,4 +81,22 @@ public class DbConnect {
 		System.out.println("VendorError: " + sqle.getErrorCode());
 	}
 	
+	/**
+	 *
+	 * closeConnection() takes a connection and closes it.
+	 * 
+	 * @param conn : the connection to close
+	 * 
+	 */
+	public void closeConnection(Connection conn) {
+		// try to close the connection to the database
+		if (conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException ignore) {
+				// the connection must already be closed so I don't care
+			}
+		}
+	}
+	
 }
