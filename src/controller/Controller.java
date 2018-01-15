@@ -1,6 +1,6 @@
 /** 
  * 
- * Name: 		Haemin Ryu
+ * Name: 		Haemin Ryu and Matt Hunt
  * Class:		CS360-01 Software Engineering
  * Instructor: 	eProf Sedlmeyer
  * Project:		Assignment 1: Welcome to the Real World
@@ -8,9 +8,23 @@
  * Due:			01/17/18
  * 
  **/
+package controller; 
+
 //Controller.java
 //
-package controller;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
+import model.HistoryModel;
+import model.SiteModel;
+import view.SiteView;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -50,17 +64,15 @@ public class Controller {
 
 	// where the magic happens
 	public static void main(String[] args) {
-		Controller c = new Controller(null, null);
+		Controller c = new Controller(null, null, null);
 		ArrayList<SiteModel> s = c.getSites();
 		System.out.println(s.toString());
 	}
-
+	
 	// call model AND view
-	// constructor
-	public Controller(SiteModel site, SiteView view) {
-		db = new DbConnect();
-
+	public Controller(SiteModel site, HistoryModel history , SiteView view) {
 		this.site = site;
+		this.history = history; 
 		this.view = view;
 	}
 
@@ -282,12 +294,10 @@ public class Controller {
 				}
 			}
 		}
-		
 	}
 
-	// DELETE. delete a site.
-	public void deleteSite(int SiteNum) {
-
+	public void deleteSite(int num) {
+	
 	}
 
 	/* CRUD operation for History */
@@ -311,29 +321,77 @@ public class Controller {
 
 	// DELETE.
 	public void deleteHistoryItem(int historyID) {
-
+		
 	}
 
+	
+	// Ryu
+	public void downloadMap(List listData) {
+		
+		int[] addArray = listData;
+		 
+		for (int i = 0; i < site.count(); i++){
+			addArray.push(sites[i].ASSET_NAME); // where you are creating new markers. 
+		}
+
+		
+		if(addArray.length>0)
+		{
+			//iterate throw array
+		}
+		
+		
+		long lat = model.SiteModel.getLat();
+		long lng = model.SiteModel.getLng();
+		
+		try {
+			string imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=" 
+		+ lat+ ","+ lng 
+		+ "&zoom=10&size=612x612&scale=2&format=png&visible="+lat+","+lng 
+		+ "&markers=color:blue%7Clabel:S%7C" 
+		+ lat+ ","+ lng+"&sensor=false"; 
+			
+			URL url = new URL(imageURL);
+			InputStream is = url.openStream();
+			OutputStream os = new FileOutputStream(lng+","+lat);
+			byte[] b = new byte[2048];
+			int length;
+			while ((length = is.read(b)) != -1) {
+				os.write(b, 0, length);
+				
+			}
+			is.close();
+			os.close();
+		}
+		catch(Exception exc){
+			exc.printStackTrace(); // Print stacktrace and return. Otherwise you get an NPE if it fails
+			System.out.println("Error" + exc);
+			
+		}
+	}
+	
+	// Ryu
+	public ImageIcon getMap(long lng, long lat) {
+		return new ImageIcon(new ImageIcon(lng, lat)).getImage().getScaledInstance(612, 612, java.awt.image.SCALE_SMOOTH);
+	}
+	
+	// Ryu
+	public void mapDelete(String name) {
+		Map m = new map(name);
+		m.remove(lng, lat)		//Iterator.remove();
+	}
+	
 	// updateMap using GoogleStaticAPI and return to the view
+	// Ryu
 	public void updateMap() {
-
+		
+		Controller.downloadMap(addArray);
+		BuildMapPanel = new JLabel(Controller.getMap(lng, lat)); // √ ±‚»≠ 
+		Controller.mapDelete(name);
+		BuildMapPanel(JBL);
+		
+		//BuildMapPanel(JButtonListener JBL)
+		//BuildMapControlPanel
+				
 	}
-
-	/*
-	 * //without DB public static void main(String[] args) {
-	 * 
-	 * // Site model = SiteInfoFromDB(); // History model = HistoryInfoFromDB(); //
-	 * Site view = new Site();
-	 * 
-	 * updateSite(Sites, int SiteNum); updateMap();
-	 * 
-	 * 
-	 * }
-	 * 
-	 * private static Site SiteInfoFromDB() {
-	 * 
-	 * int siteNum; Site site = new Site(); site site.getSite(siteNum); return site;
-	 * 
-	 * }
-	 */
 }
