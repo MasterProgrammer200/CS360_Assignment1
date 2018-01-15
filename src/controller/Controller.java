@@ -145,10 +145,10 @@ public class Controller {
 	// Ryu
 	public void downloadMap(List listData) {
 		
-		int[] addArray = listData;
+		int[] addArray;
 		 
-		for (int i = 0; i < site.count(); i++){
-			addArray.push(sites[i].ASSET_NAME); // where you are creating new markers. 
+		for (int i = 0; i < listData.length; i++){
+			listData.push(addArray[i].ASSET_NAME);// where you are creating new markers. 
 		}
 
 		
