@@ -379,7 +379,7 @@ public class Controller {
 		} 
 		
 		googleAPI.downloadMap(location);//Search for the actual address
-		//googleMap = new JLabel(googleAPI.getMap(location)); //Reset to the map you downloaded
+		//googleMap = new JLabel(googleAPI.getMap(location)); //Reset to the map you download
 		googleAPI.MapFileDelete(location);//Delete the corresponding image file from the program. 
 		//JLabelPanel.add(siteLocationLabel);// Google Maps are launched in JFrame
 	}
