@@ -213,7 +213,76 @@ public class Controller {
 
 	// UPDATE. edit and change a site.
 	public void updateSite(SiteModel s, int SiteNum) {
-		// view.printDetails(model.getSites(), model.getSite(SiteNum));
+
+		///
+		/// declare local variables
+		///
+
+		SiteModel result; // holds the site retrieved from the database
+		Connection conn; // holds the connection to the database
+		String query; // holds query string
+		PreparedStatement stmt; // holds Prepared Statement to execute on the database
+		ResultSet rs; // holds the result from the database
+
+		// initialize variables
+		result = new SiteModel();
+		conn = null;
+		query = null;
+		stmt = null;
+		rs = null;
+
+		try {
+
+			// connect to the database
+			conn = db.getRemoteConnection();
+
+			// concatenate select query
+			query = "UPDATE " + TABLE_SITE + " SET " 
+			+ COLUMN_NAME + " = ?, " 
+			+ COLUMN_SHORT_DESC + " = ?, "  
+			+ COLUMN_LOCATION + " = ?, " 
+			+ COLUMN_LATITUDE + " = ?, "
+			+ COLUMN_LONGITUDE + " = ?, "
+			+ "WHERE " + COLUMN_SITE_NUM + " = ?;";
+
+			// initialize the prepare statement, execute it, and
+			// store the result
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, s.getName());
+			stmt.setString(2, s.getShortDesc());
+			stmt.setString(3, s.getLoc());
+			stmt.setBigDecimal(4, s.getLat());
+			rs = stmt.executeQuery();
+			rs.next();
+
+			// store the result from the database in the site object
+			result.setId(rs.getInt(COLUMN_ID));
+			result.setNum(rs.getInt(COLUMN_SITE_NUM));
+			result.setName(rs.getString(COLUMN_NAME));
+			result.setShortDesc(rs.getString(COLUMN_SHORT_DESC));
+			result.setLoc(rs.getString(COLUMN_LOCATION));
+			result.setLat(rs.getBigDecimal(COLUMN_LATITUDE));
+			result.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
+
+		} catch (SQLException ex) {
+
+			// display any errors
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+
+		} finally {
+
+			// try to close the connection to the database
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException ignore) {
+
+				}
+			}
+		}
+		
 	}
 
 	// DELETE. delete a site.
