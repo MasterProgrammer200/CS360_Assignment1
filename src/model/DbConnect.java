@@ -66,4 +66,19 @@ public class DbConnect {
 		
 	}
 	
+	/**
+	 *
+	 * printSQLError() takes a sql exception and displays it
+	 * to the console. 
+	 * 
+	 * @param sqle : the sql exception to display
+	 * 
+	 */
+	public void printSQLError(SQLException sqle) {
+		// display any errors
+		System.out.println("SQLException: " + sqle.getMessage());
+		System.out.println("SQLState: " + sqle.getSQLState());
+		System.out.println("VendorError: " + sqle.getErrorCode());
+	}
+	
 }

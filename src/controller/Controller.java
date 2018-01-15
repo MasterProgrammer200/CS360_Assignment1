@@ -130,10 +130,7 @@ public class Controller {
 
 		} catch (SQLException ex) {
 
-			// display any errors
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			db.printSQLError(ex);
 
 		} finally {
 
@@ -196,10 +193,7 @@ public class Controller {
 
 		} catch (SQLException ex) {
 
-			// display any errors
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			db.printSQLError(ex);
 
 		} finally {
 
@@ -270,10 +264,7 @@ public class Controller {
 
 		} catch (SQLException ex) {
 
-			// display any errors
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			db.printSQLError(ex);
 
 		} finally {
 
@@ -346,10 +337,7 @@ public class Controller {
 
 		} catch (SQLException ex) {
 
-			// display any errors
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			db.printSQLError(ex);
 
 		} finally {
 
@@ -402,11 +390,8 @@ public class Controller {
 			}
 
 		} catch (SQLException ex) {
-
-			// display any errors
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			
+			db.printSQLError(ex);
 
 		} finally {
 
