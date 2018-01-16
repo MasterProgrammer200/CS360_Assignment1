@@ -39,6 +39,7 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * The purpose of the SiteView............
@@ -81,6 +82,8 @@ public class SiteView extends JFrame{
 	private JButton panRightButton;                 //
 	private JButton ZoomInButton;                   //
 	private JButton ZoomOutButton;                  //
+	private JPanel panJPanel;						//
+	private JPanel zoomJPanel;						//
 	
 	// BuildMapPanel Fields
 	private JPanel mapPanel;						//
@@ -97,7 +100,7 @@ public class SiteView extends JFrame{
 	private JPanel buttonJPanel2;                   //
 	private JPanel buttonJPanel3;                   //
 	private JScrollPane siteSelectorScrollPane;		//
-	private JList siteSelectorList;				//
+	private JList siteSelectorList;				    //
 	                                                
 	// BuildMenuBarPanel Fields
 	private JMenuBar menuBar;						//
@@ -108,8 +111,10 @@ public class SiteView extends JFrame{
 	private JLabel titleBarJLabel;					//
 	 
 	 // General
-	private JButtonListener JBL;					//
-	String[] data; 									// array for siteJList
+	private JButtonListener jBL;					//
+	String[] data; 									// Array for siteJList.
+	private ListSelectionListener jLL;
+
     
 	
 	// Constructor
@@ -122,9 +127,7 @@ public class SiteView extends JFrame{
 		// setSize(WIDTH, HEIGHT);  				// not used, remove after debugging.
 		
 		// Retrieve array for siteJList	            
-		//data = .getArray(); ........................................<<<<< To Do
-		
-		data = new String[5];
+		data = new String[5]; //------------------>>>>>>>>>>>>>>method call here.
 		
 		setTitle("SJRWI Site Manager Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -132,14 +135,14 @@ public class SiteView extends JFrame{
 		setResizable(false);
 		
 		// Instantiate Event Listener
-		JBL = new JButtonListener();
+		jBL = new JButtonListener();
 		
 		// Build All JPanels
 		BuildDisplayPanel();		
-		BuildMapControlPanel(JBL);
+		BuildMapControlPanel(jBL);
 		BuildMapPanel(); 		
-		BuildToolBarPanel(JBL); 	
-		BuildMenuBar(JBL);			
+		BuildToolBarPanel(jBL, jLL); 	
+		BuildMenuBar(jBL);			
 		BuildTitleBarPanel();		
 		
 		// Add All JPanels
@@ -154,9 +157,9 @@ public class SiteView extends JFrame{
 		setVisible(true);
 		
 	}//end HomeView Constructor					
-	
 
-	 
+	
+	
 	/**
 	 * BuildDisplayPanel configures the JPanel titled" site information". 
 	 */
@@ -255,6 +258,16 @@ public class SiteView extends JFrame{
 		mapControlPanel = new JPanel();
 		mapControlPanel.setBorder(BorderFactory.createTitledBorder("Map Controls"));
 		mapControlPanel.setPreferredSize(new Dimension(150,250));
+		
+		// Create JPanels
+		panJPanel = new JPanel();
+		zoomJPanel = new JPanel();
+		
+		// Configure JPanel Layout Managers
+		panJPanel.setLayout(new GridLayout(2, 2));
+		zoomJPanel.setLayout(new GridLayout(2, 2));
+		
+		
 		mapControlPanel.add(new JLabel("Coming Soon!"));
 
 	}//end BuildMapControlPanel
@@ -264,7 +277,7 @@ public class SiteView extends JFrame{
 	/**
 	 * BuildMapPanel configures the JPanel that provides the GUIs map. 
 	 * 
-	 * @param JBL
+	 * @param jBL
 	 * 		The ActionListener for this JPanel.
 	 */
 	private void BuildMapPanel(){
@@ -284,8 +297,9 @@ public class SiteView extends JFrame{
 	 * 
 	 * @param jBL
 	 * 		The ActionListener for this JPanel.
+	 * @param jLL 
 	 */
-	private void BuildToolBarPanel(JButtonListener jBL){
+	private void BuildToolBarPanel(JButtonListener jBL, ListSelectionListener jLL){
 		
 		// Local Variable
 		boolean editable = false;
@@ -341,13 +355,8 @@ public class SiteView extends JFrame{
 		JScrollPane siteSelectorScrollPane = new JScrollPane(siteSelectorList);
 		siteSelectorScrollPane.setPreferredSize(new Dimension(80, 80));
 		
-		
-		
-		
-
-
-		
-		// Add actionListener
+		// Add EventListener
+		siteSelectorList.addListSelectionListener(jLL);
 		
 		
 		// Add Panels to toolbarPanel
@@ -389,7 +398,7 @@ public class SiteView extends JFrame{
 	
 	
 	/**
-	 * The JComponentListener
+	 * The JButtonListener
 	 * 
 	 * @author becknd01
 	 */
@@ -404,20 +413,22 @@ public class SiteView extends JFrame{
 	}//end ActionListener 
 	
 	
+	/**
+	 * The JListListener is the Event handler for the site selector JList.
+	 * 
+	 * @author becknd01
+	 *
+	 */
+	private class JListListener implements ListSelectionListener {
+		
+		@Override
+	    public void valueChanged(ListSelectionEvent e) {
+	        
+		}//end ListSelectionModel
+		
+	}//end JListListener
 	
-	public void valueChanged(ListSelectionEvent e) {
-	    if (e.getValueIsAdjusting() == false) {
-
-	        if (siteSelectorList.getSelectedIndex() == -1) {
-	        //No selection, disable fire button.
-	           // fireButton.setEnabled(false);
-
-	        } else {
-	        //Selection, enable the fire button.
-	           // fireButton.setEnabled(true);
-	        }
-	    }
-	}//end valueChanged
+	
 	
 	/**
 	 * The purpose of this method is to instantiate the SiteViewTest class.
@@ -428,5 +439,5 @@ public class SiteView extends JFrame{
 	public static void main(String[] args) {
 		
 		new SiteView();
-	}
-}
+	}//end main
+}//end class SiteView
