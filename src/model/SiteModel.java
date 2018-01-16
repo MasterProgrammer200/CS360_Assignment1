@@ -11,6 +11,7 @@
 package model;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 
 public class SiteModel {
 	
@@ -25,6 +26,7 @@ public class SiteModel {
 	private String loc;			// holds the location of the site
 	private BigDecimal lat;			// holds the latitude of the site
 	private BigDecimal lng;			// holds the longitude of the site
+	private Date dateCreated;	// holds the date the site was created
 	
 	///
 	/// getters and setters
@@ -71,6 +73,12 @@ public class SiteModel {
 	}
 	public void setLng(BigDecimal lng) {
 		this.lng = lng;
+	}
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 	
 }
