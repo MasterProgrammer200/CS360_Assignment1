@@ -10,7 +10,7 @@
  * Due:			01/17/18
  * 
  **/
-package STRWI_SiteView_Test;
+package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -46,7 +46,7 @@ import javax.swing.event.ListSelectionEvent;
  * @author becknd01
  *
  */
-public class SiteViewTest extends JFrame{
+public class SiteView extends JFrame{
 
 	// Constants
 	//private final int WIDTH = 500;  // not used, remove after debugging.
@@ -116,7 +116,7 @@ public class SiteViewTest extends JFrame{
 	/**
 	 * The constructor for the HomeView Class Creates and configures the Site Manager Application's GUI.
 	 */
-	public SiteViewTest() {
+	public SiteView() {
 		
 		// Configure Window
 		// setSize(WIDTH, HEIGHT);  				// not used, remove after debugging.
@@ -427,6 +427,6 @@ public class SiteViewTest extends JFrame{
 	 */
 	public static void main(String[] args) {
 		
-		new SiteViewTest();
+		new SiteView();
 	}
 }
