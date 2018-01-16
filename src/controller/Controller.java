@@ -416,14 +416,63 @@ public class Controller {
 	}
 
 	// READ. browse history items. we can get all of history items at a time.
-	public HistoryModel[] getHistoryItems() {
-		// History[] h = {a, b, c, ..., g};
-		return null;
-	}
+	public ArrayList<HistoryModel> getHistoryItems(int siteNum) {
+	
+		///
+		/// declare local variables
+		///
 
-	// READ. browse a single history item.
-	public HistoryModel getHistoryItem() {
-		return null;
+		ArrayList<HistoryModel> result; // holds the site retrieved from the database
+		Connection conn; // holds the connection to the database
+		String query; // holds query string
+		PreparedStatement stmt; // holds Prepared Statement to execute on the database
+		ResultSet rs; // holds the result from the database
+
+		// initialize variables
+		result = new ArrayList<HistoryModel>();
+		conn = null;
+		query = null;
+		stmt = null;
+		rs = null;
+
+		try {
+
+			// connect to the database
+			conn = db.getRemoteConnection();
+
+			// concatenate select query
+			query = "SELECT * FROM " + TABLE_HISTORY + " WHERE " + COLUMN_HISTORY_SITE_NUM + " = " + " ?;";
+
+			// initialize the prepare statement, execute it, and
+			// store the result
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, siteNum);
+			rs = stmt.executeQuery();
+			
+			// loop through each object returned from the database
+			while (rs.next()) {
+				
+				HistoryModel h = new HistoryModel();
+
+				// store the result from the database in the site object
+				h.setId(rs.getInt(COLUMN_HISTORY_ID));
+				h.setSiteNum(rs.getInt(COLUMN_HISTORY_SITE_NUM));
+				h.setAction(rs.getString(COLUMN_HISTORY_ACTION).charAt(0));
+				h.setDate(rs.getDate(COLUMN_HISTORY_DATE));
+				
+				// add the site to the list
+				result.add(h);
+
+			}
+
+		} catch (SQLException ex) {
+			db.printSQLError(ex);
+		} finally {
+			db.closeConnection(conn);
+		}
+
+		// return the site retrieved from the database
+		return result;
 	}
 
 	// we do not need to UPDATE because we should update once a while.
