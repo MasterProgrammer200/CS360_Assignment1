@@ -19,11 +19,13 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+import javax.print.attribute.standard.DateTimeAtCompleted;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import model.HistoryModel;
 import model.SiteModel;
+import model.StringSiteModel;
 import view.SiteView;
 
 import java.sql.Connection;
@@ -32,6 +34,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import model.DbConnect;
@@ -523,6 +526,81 @@ public class Controller {
 		}
 
 		return result;
+		
+	}
+	
+	/**
+	 * 
+	 * checkHistory() takes a history item and checks if its date
+	 * field is older than three months.
+	 * 
+	 * @param history : the history item whose date we should compare
+	 * 
+	 * @return wether the history item is older than three months
+	 * 
+	 */
+	public boolean checkHistory(HistoryModel history) {
+		
+		///
+		/// declare local variables
+		///
+		boolean isOlderThan3Months;	// holds wether the history item is older than three months
+		LocalDate historyDate;		// holds the history date
+		
+		// initialize variables
+		isOlderThan3Months = false;
+		historyDate = LocalDate.parse(history.getDate().toString());
+		
+		// check if the history date is older than three months
+		if (historyDate.isBefore(LocalDate.now().minusMonths(3))) {
+			// set flag to tree
+			isOlderThan3Months = true;
+		}
+		
+		// return whether the history item is older than three months
+		return isOlderThan3Months;
+		
+	}
+	
+	/**
+	 * 
+	 * siteArrayListToArray() takes a Site array list and converts it into
+	 * an array.
+	 * 
+	 * @param strArrList : the array list to transform into an array
+	 * 
+	 * @return the resulting String Site array
+	 * 
+	 */
+	public StringSiteModel[] siteArrayListToArray(ArrayList<SiteModel> strArrList) {
+		
+		///
+		/// declare local variables
+		///
+		StringSiteModel[] strSiteArray;
+		
+		// Initialize local variables
+		strSiteArray = new StringSiteModel[strArrList.size()];	// set array size to that of the array list
+		
+		// loop through each item in the array
+		for (int i = 0; i < strSiteArray.length; i++) {
+			
+			// get the site at the current index
+			SiteModel s = strArrList.get(i);
+			
+			// set the current array item with the values at the current site
+			strSiteArray[i].setId(s.getId());
+			strSiteArray[i].setNum("" + s.getNum());
+			strSiteArray[i].setName(s.getName());
+			strSiteArray[i].setShortDesc(s.getShortDesc());
+			strSiteArray[i].setLoc(s.getLoc());
+			strSiteArray[i].setLat(""+s.getLat());
+			strSiteArray[i].setLng(""+s.getLng());
+			
+		}
+		
+		// return the newly created array of string sites
+		return strSiteArray;
 		
 	}
 
