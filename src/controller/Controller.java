@@ -478,11 +478,54 @@ public class Controller {
 	// we do not need to UPDATE because we should update once a while.
 
 	// DELETE.
-	public void deleteHistoryItem(int historyID) {
+	public boolean deleteHistoryItem(int siteNum) {
+		
+		///
+		/// declare local variables
+		///
+
+		boolean result; // holds whether the histories were successfully deleted
+		Connection conn; // holds the connection to the database
+		String query; // holds query string
+		PreparedStatement stmt; // holds Prepared Statement to execute on the database
+		ResultSet rs; // holds the result from the database
+
+		// initialize variables
+		result = false;
+		conn = null;
+		query = null;
+		stmt = null;
+		rs = null;
+
+		try {
+
+			// connect to the database
+			conn = db.getRemoteConnection();
+
+			// concatenate select query
+			query = "DELETE FROM " + TABLE_HISTORY +  " WHERE " + COLUMN_HISTORY_SITE_NUM + " = ?;";
+
+			// initialize the prepare statement, execute it, and
+			// store the result
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, siteNum);
+			int count = stmt.executeUpdate();
+
+			// check if insert was successful
+			if (count > 0) {
+				result = true;
+			}
+
+		} catch (SQLException ex) {
+			db.printSQLError(ex);
+		} finally {
+			db.closeConnection(conn);
+		}
+
+		return result;
 		
 	}
 
-	
 	// Ryu
 	public void downloadMap(List listData) {
 		
