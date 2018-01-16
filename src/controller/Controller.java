@@ -568,15 +568,15 @@ public class Controller {
 	 * @return the resulting String Site array
 	 * 
 	 */
-	public StringSiteModel[] siteArrayListToArray(ArrayList<SiteModel> strArrList) {
+	public String[] siteArrayListToArray(ArrayList<SiteModel> strArrList) {
 		
 		///
 		/// declare local variables
 		///
-		StringSiteModel[] strSiteArray;
+		String[] strSiteArray;
 		
 		// Initialize local variables
-		strSiteArray = new StringSiteModel[strArrList.size()];	// set array size to that of the array list
+		strSiteArray = new String[strArrList.size()];	// set array size to that of the array list
 		
 		// loop through each item in the array
 		for (int i = 0; i < strSiteArray.length; i++) {
@@ -585,13 +585,7 @@ public class Controller {
 			SiteModel s = strArrList.get(i);
 			
 			// set the current array item with the values at the current site
-			strSiteArray[i].setId(s.getId());
-			strSiteArray[i].setNum("" + s.getNum());
-			strSiteArray[i].setName(s.getName());
-			strSiteArray[i].setShortDesc(s.getShortDesc());
-			strSiteArray[i].setLoc(s.getLoc());
-			strSiteArray[i].setLat(""+s.getLat());
-			strSiteArray[i].setLng(""+s.getLng());
+			strSiteArray[i] = s.getNum() + "";
 			
 		}
 		
@@ -610,34 +604,31 @@ public class Controller {
 	 * @return the resulting String History array
 	 * 
 	 */
-	public StringHistoryModel[] historyArrayListToArray(ArrayList<HistoryModel> historyArrList) {
-		
-		///
-		/// declare local variables
-		///
-		StringHistoryModel[] strHistoryArray;
-		
-		// Initialize local variables
-		strHistoryArray = new StringHistoryModel[historyArrList.size()];	// set array size to that of the array list
-		
-		// loop through each item in the array
-		for (int i = 0; i < strHistoryArray.length; i++) {
-			
-			// get the site at the current index
-			HistoryModel h = historyArrList.get(i);
-			
-			// set the current array item with the values at the current site
-			strHistoryArray[i].setId(h.getId());
-			strHistoryArray[i].setSiteNum(""+h.getSiteNum());
-			strHistoryArray[i].setAction(""+h.getAction());
-			strHistoryArray[i].setDate(""+h.getDate());			
-			
-		}
-		
-		// return the newly created array of string histories
-		return strHistoryArray;
-		
-	}
+//	public String[] historyArrayListToArray(ArrayList<HistoryModel> historyArrList) {
+//		
+//		///
+//		/// declare local variables
+//		///
+//		String[] strHistoryArray;
+//		
+//		// Initialize local variables
+//		strHistoryArray = new String[historyArrList.size()];	// set array size to that of the array list
+//		
+//		// loop through each item in the array
+//		for (int i = 0; i < strHistoryArray.length; i++) {
+//			
+//			// get the site at the current index
+//			HistoryModel h = historyArrList.get(i);
+//			
+//			// set the current array item with the values at the current site
+//			strHistoryArray[i] = h.getSiteNum()	
+//			
+//		}
+//		
+//		// return the newly created array of string histories
+//		return strHistoryArray;
+//		
+//	}
 	
 
 	// Ryu
