@@ -25,6 +25,7 @@ import javax.swing.JLabel;
 
 import model.HistoryModel;
 import model.SiteModel;
+import model.StringHistoryModel;
 import model.StringSiteModel;
 import view.SiteView;
 
@@ -603,6 +604,46 @@ public class Controller {
 		return strSiteArray;
 		
 	}
+	
+	/**
+	 * 
+	 * historyArrayListToArray() takes history array list and converts it into
+	 * an history array.
+	 * 
+	 * @param historyArrList : the array list to transform into an array
+	 * 
+	 * @return the resulting String History array
+	 * 
+	 */
+	public StringHistoryModel[] historyArrayListToArray(ArrayList<HistoryModel> historyArrList) {
+		
+		///
+		/// declare local variables
+		///
+		StringHistoryModel[] strHistoryArray;
+		
+		// Initialize local variables
+		strHistoryArray = new StringHistoryModel[historyArrList.size()];	// set array size to that of the array list
+		
+		// loop through each item in the array
+		for (int i = 0; i < strHistoryArray.length; i++) {
+			
+			// get the site at the current index
+			HistoryModel h = historyArrList.get(i);
+			
+			// set the current array item with the values at the current site
+			strHistoryArray[i].setId(h.getId());
+			strHistoryArray[i].setSiteNum(""+h.getSiteNum());
+			strHistoryArray[i].setAction(""+h.getAction());
+			strHistoryArray[i].setDate(""+h.getDate());			
+			
+		}
+		
+		// return the newly created array of string histories
+		return strHistoryArray;
+		
+	}
+	
 
 	// Ryu
 	public void downloadMap(List listData) {
