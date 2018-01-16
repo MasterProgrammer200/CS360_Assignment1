@@ -55,13 +55,12 @@ public class Controller {
 	private final String COLUMN_LATITUDE = "lat";
 	private final String COLUMN_LONGITUDE = "lng";
 
-	// private final String PARAMETER_FIRST = "@" + COLUMN_FIRST;
-	// private final String PARAMETER_LAST = "@" + COLUMN_LAST;
-	// private final String PARAMETER_PAY_RATE = "@" + COLUMN_PAY_RATE;
-	private final String PARAMETER_ID = "@" + COLUMN_ID;
-	// private final String connectionString = "Data Source = |DataDirectory|\\" +
-	// DB_NAME + "; Version = 3";
-
+	private final String TABLE_HISTORY = "history";
+	private final String COLUMN_HISTORY_ID = "id";
+	private final String COLUMN_HISTORY_SITE_NUM = "num";
+	private final String COLUMN_HISTORY_ACTION = "action";
+	private final String COLUMN_HISTORY_DATE = "date";
+	
 	// where the magic happens
 	public static void main(String[] args) {
 		Controller c = new Controller(null, null, null);
