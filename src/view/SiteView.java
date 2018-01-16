@@ -30,12 +30,15 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
 
 /**
  * The purpose of the SiteView............
@@ -46,8 +49,9 @@ import javax.swing.JTextPane;
 public class SiteView extends JFrame{
 
 	// Constants
-	private final int WIDTH = 500;
-	private final int HEIGHT = 500;
+	//private final int WIDTH = 500;  // not used, remove after debugging.
+	//private final int HEIGHT = 500; // not used, remove after debugging.
+	
 	
 	// BuildDisplayPanel Fields                     
 	private JPanel displayPanel;	                //
@@ -66,7 +70,7 @@ public class SiteView extends JFrame{
 	private JTextField siteLattitudeTextField;		//
 	private JTextField siteLocationTextField;		//
 	private JTextField siteNameTextField;			//
-	JScrollPane siteDescriptionScrollPane;			//
+	private JScrollPane siteDescriptionScrollPane;	//
 	private JTextArea siteDescriptionTextArea;		//
 	 
 	// BuildMapControlPanel Fields
@@ -93,7 +97,7 @@ public class SiteView extends JFrame{
 	private JPanel buttonJPanel2;                   //
 	private JPanel buttonJPanel3;                   //
 	private JScrollPane siteSelectorScrollPane;		//
-	private JTextArea siteSelectorList;			//
+	private JList siteSelectorList;				//
 	                                                
 	// BuildMenuBarPanel Fields
 	private JMenuBar menuBar;						//
@@ -105,7 +109,7 @@ public class SiteView extends JFrame{
 	 
 	 // General
 	private JButtonListener JBL;					//
-
+	String[] data; 									// array for siteJList
     
 	
 	// Constructor
@@ -115,7 +119,13 @@ public class SiteView extends JFrame{
 	public SiteView() {
 		
 		// Configure Window
-		// setSize(WIDTH, HEIGHT);
+		// setSize(WIDTH, HEIGHT);  				// not used, remove after debugging.
+		
+		// Retrieve array for siteJList	            
+		//data = .getArray(); ........................................<<<<< To Do
+		
+		data = new String[5];
+		
 		setTitle("SJRWI Site Manager Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -323,9 +333,18 @@ public class SiteView extends JFrame{
 		buttonJPanel.add(buttonJPanel2);
 		buttonJPanel.add(buttonJPanel3);
 		
-		// Create and Configure JTextArea and JScrollPane
-		siteSelectorList = new JTextArea();	
-		siteSelectorScrollPane = new JScrollPane(siteDescriptionTextArea);
+		// Create and Configure JList and JScrollPane
+		siteSelectorList = new JList(data); 
+		siteSelectorList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		siteSelectorList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		siteSelectorList.setVisibleRowCount(-1);
+		JScrollPane siteSelectorScrollPane = new JScrollPane(siteSelectorList);
+		siteSelectorScrollPane.setPreferredSize(new Dimension(80, 80));
+		
+		
+		
+		
+
 
 		
 		// Add actionListener
@@ -384,6 +403,21 @@ public class SiteView extends JFrame{
 		
 	}//end ActionListener 
 	
+	
+	
+	public void valueChanged(ListSelectionEvent e) {
+	    if (e.getValueIsAdjusting() == false) {
+
+	        if (siteSelectorList.getSelectedIndex() == -1) {
+	        //No selection, disable fire button.
+	           // fireButton.setEnabled(false);
+
+	        } else {
+	        //Selection, enable the fire button.
+	           // fireButton.setEnabled(true);
+	        }
+	    }
+	}//end valueChanged
 	
 	/**
 	 * The purpose of this method is to instantiate the SiteViewTest class.
