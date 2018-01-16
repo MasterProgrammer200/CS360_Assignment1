@@ -10,19 +10,14 @@
  **/
 package controller; 
 
+import java.io.File;
 //Controller.java
 //
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
-import javax.print.attribute.standard.DateTimeAtCompleted;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
 import model.HistoryModel;
 import model.SiteModel;
 import model.StringHistoryModel;
@@ -30,18 +25,16 @@ import model.StringSiteModel;
 import view.SiteView;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 
 import model.DbConnect;
-import model.HistoryModel;
-import model.SiteModel;
-import view.SiteView;
+
 
 public class Controller {
 
@@ -70,6 +63,7 @@ public class Controller {
 		Controller c = new Controller(null, null, null);
 		ArrayList<SiteModel> s = c.getSites();
 		System.out.println(s.toString());
+		//UpdateMap updatemap = new UpdateMap(); 
 	}
 	
 	// call model AND view
@@ -561,6 +555,7 @@ public class Controller {
 		// return whether the history item is older than three months
 		return isOlderThan3Months;
 		
+
 	}
 	
 	/**
@@ -646,34 +641,23 @@ public class Controller {
 	
 
 	// Ryu
-	public void downloadMap(List listData) {
-		
-		int[] addArray;
-		 
-		for (int i = 0; i < listData.length; i++){
-			listData.push(addArray[i].ASSET_NAME);// where you are creating new markers. 
-		}
-
-		
-		if(addArray.length>0)
-		{
-			//iterate throw array
-		}
-		
-		
-		long lat = model.SiteModel.getLat();
-		long lng = model.SiteModel.getLng();
-		
+	public void downloadMap(String location) {
+		/*
+		 Multiple markers at this line
+		- Cannot make a static reference to the non-static method getLng() from the type 
+		 SiteModel
+		- Type mismatch: cannot convert from BigDecimal to long
+		*/
 		try {
-			string imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=" 
-		+ lat+ ","+ lng 
-		+ "&zoom=10&size=612x612&scale=2&format=png&visible="+lat+","+lng 
-		+ "&markers=color:blue%7Clabel:S%7C" 
-		+ lat+ ","+ lng+"&sensor=false"; 
+			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=FortWayne" 
+		//+ location 
+		+ "&zoom=9&size=250x250&scale=2&format=png&visible="+location //if you want to use UTF-8: URLEncoder.encode(location, "UTF-8")
+		+ "&markers=size:tiny%7Ccolor:red%7C" 
+		+ location +"&sensor=false"; 
 			
 			URL url = new URL(imageURL);
 			InputStream is = url.openStream();
-			OutputStream os = new FileOutputStream(lng+","+lat);
+			OutputStream os = new FileOutputStream(location);
 			byte[] b = new byte[2048];
 			int length;
 			while ((length = is.read(b)) != -1) {
@@ -684,34 +668,43 @@ public class Controller {
 			os.close();
 		}
 		catch(Exception exc){
-			exc.printStackTrace(); // Print stacktrace and return. Otherwise you get an NPE if it fails
+			exc.printStackTrace(); // Print stack trace and return.
 			System.out.println("Error" + exc);
 			
 		}
 	}
 	
 	// Ryu
-	public ImageIcon getMap(long lng, long lat) {
-		return new ImageIcon(new ImageIcon(lng, lat)).getImage().getScaledInstance(612, 612, java.awt.image.SCALE_SMOOTH);
+	//얻어오는 함수
+	
+	public ImageIcon getMap(String location) { //bring the file which was download
+		return new ImageIcon((new ImageIcon(location)).getImage().getScaledInstance(250, 250, java.awt.Image.SCALE_SMOOTH)); //니가 다운로드 해 받은 그 이미지 파일을 가져올 수 있도록 합니다. ctrl shift o, scale smooth라고 힌트를 넣어줌
 	}
 	
 	// Ryu
-	public void mapDelete(String name) {
-		Map m = new map(name);
-		m.remove(lng, lat)		//Iterator.remove();
+	public void MapFileDelete(String fileName) {
+		File f = new File(fileName);
+		f.delete();
 	}
 	
 	// updateMap using GoogleStaticAPI and return to the view
 	// Ryu
 	public void updateMap() {
+		Controller googleAPI = new Controller(null, null, null);
+		ArrayList<SiteModel> Sites = getSites();
+		String location = null; 
+		//JLabel googleMap = SiteView.siteLocationLabel; // Declaration by variables 	
 		
-		Controller.downloadMap(addArray);
-		BuildMapPanel = new JLabel(Controller.getMap(lng, lat)); // 초기화 
-		Controller.mapDelete(name);
-		BuildMapPanel(JBL);
+		for(SiteModel site : Sites) {
+			location = site.getLat()+ "," + site.getLng(); // latitude , longitude
+		} 
 		
-		//BuildMapPanel(JButtonListener JBL)
-		//BuildMapControlPanel
-				
+		googleAPI.downloadMap(location);//Search for the actual address
+		//googleMap = new JLabel(googleAPI.getMap(location)); //Reset to the map you download
+		googleAPI.MapFileDelete(location);//Delete the corresponding image file from the program. 
+		//JLabelPanel.add(siteLocationLabel);// Google Maps are launched in JFrame
 	}
 }
+
+//BuildMapPanel(JButtonListener JBL)
+//BuildMapControlPanel
