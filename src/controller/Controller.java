@@ -359,8 +359,60 @@ public class Controller {
 
 	/* CRUD operation for History */
 	// CREATE. add a history item.
-	public void createHistoryItem(HistoryModel h) {
+	public boolean createHistoryItem(HistoryModel h) {
+		
+		///
+		/// declare local variables
+		///
 
+		boolean result; // holds whether the history item was successfully created
+		Connection conn; // holds the connection to the database
+		String query; // holds query string
+		PreparedStatement stmt; // holds Prepared Statement to execute on the database
+		ResultSet rs; // holds the result from the database
+		
+		// initialize variables
+		result = false;
+		conn = null;
+		query = null;
+		stmt = null;
+		rs = null;
+
+		try {
+
+			// connect to the database
+			conn = db.getRemoteConnection();
+
+			// concatenate select query
+			query = "INSERT INTO " + TABLE_HISTORY + " (" 
+					+ COLUMN_HISTORY_SITE_NUM + ", " 
+					+ COLUMN_HISTORY_ACTION + ", " 
+					+ COLUMN_HISTORY_DATE + ")"  
+					+ "VALUES(?, ?, ?);";
+
+			// initialize the prepare statement, execute it, and
+			// store the result
+
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, h.getSiteNum());
+			stmt.setString(2, ""+h.getAction());
+			stmt.setDate(3, h.getDate());
+
+			int count = stmt.executeUpdate();
+			
+			// check if insurt was successful 
+			if (count > 0) {
+				result = true;
+			}
+
+		} catch (SQLException ex) {
+			db.printSQLError(ex);
+		} finally {
+			db.closeConnection(conn);
+		}
+		
+		return result;
+		
 	}
 
 	// READ. browse history items. we can get all of history items at a time.
