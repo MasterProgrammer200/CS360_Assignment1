@@ -17,25 +17,20 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
-import model.HistoryModel;
-import model.SiteModel;
-import model.StringHistoryModel;
-import model.StringSiteModel;
-import view.SiteView;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.time.LocalDate;
-
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 import model.DbConnect;
+import model.HistoryModel;
+import model.SiteModel;
+import view.SiteView;
 
 
 public class Controller {
@@ -627,6 +622,34 @@ public class Controller {
 		
 	}
 	
+	
+	public String changeLocation(ArrayList<SiteModel> strArrList) {
+		ArrayList<SiteModel> Sites = getSites();
+		String locat = new String(); 
+
+		for(int i = 0; i < Sites.size(); i++) {
+			locat += "&markers=size:tiny%7Ccolor:red%7C";
+			locat += Sites.get(i).getLat()+ "," + Sites.get(i).getLng(); // latitude , longitude
+			//System.out.print(locat);
+		} 
+		return locat;
+	}
+		
+		
+/*		String[] loca = null;
+		//int keynum = site.getNum();
+		for (int i = 0; i < strArrList.length; i++) {
+			// set the current array item with the values at the current site
+			loca[i] = site.getLat()+ "," + site.getLng();
+			while (true) {
+				loca[i] += i;
+				i++;
+				System.out.print("&markers=size:tiny%7Ccolor:red%7C" 
+								+ loca);
+				if(loca[i]==null)break;
+			  }
+	}*/
+
 
 	public void downloadMap(String location) {
 		/*
@@ -635,12 +658,18 @@ public class Controller {
 		 SiteModel
 		- Type mismatch: cannot convert from BigDecimal to long
 		*/
+		ArrayList<SiteModel> Sites = getSites();
+		String locat = changeLocation(Sites);
+		
 		try {
-			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=FortWayne" 
+			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=BUTLER,IN" 
 		//+ location 
-		+ "&zoom=9&size=250x250&scale=2&format=png&visible="+location //if you want to use UTF-8: URLEncoder.encode(location, "UTF-8")
+		+ "&zoom=8&size=250x250&scale=2&format=png&sensor=false&visible="+ location //if you want to use UTF-8: URLEncoder.encode(location, "UTF-8")
 		+ "&markers=size:tiny%7Ccolor:red%7C" 
-		+ location +"&sensor=false"; 
+		+ locat;
+		
+		
+
 			
 			URL url = new URL(imageURL);
 			InputStream is = url.openStream();
@@ -673,13 +702,12 @@ public class Controller {
 	
 	// updateMap using GoogleStaticAPI and return to the view
 	public JLabel updateMap() {
-		
 		ArrayList<SiteModel> Sites = getSites();
-		String location = null; 
+		String location = new String(); 
 		JLabel googleMap = new JLabel(); // Declaration by variables 	
 		
-		for(SiteModel site : Sites) {
-			location = site.getLat()+ "," + site.getLng(); // latitude , longitude
+		for(int i = 0; i < Sites.size(); i++) {
+			location = Sites.get(i).getLat()+ "," + Sites.get(i).getLng(); // latitude , longitude
 		} 
 		
 		downloadMap(location);//Search for the actual address
@@ -687,7 +715,11 @@ public class Controller {
 		MapFileDelete(location);//Delete the corresponding image file from the program. 
 		//JLabelPanel.add(siteLocationLabel);// Google Maps are launched in JFrame
 		
+		
+		
 		return googleMap;
+		
+	
 	}
 }
 
