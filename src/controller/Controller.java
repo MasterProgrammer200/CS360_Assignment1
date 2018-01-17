@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -57,7 +58,9 @@ public class Controller {
 	private final String COLUMN_HISTORY_DATE = "date";
 	
 	private int zoomNum;
-	
+	private BigDecimal latNum;
+	private BigDecimal lngNum;
+
 //	// where the magic happens
 //	public static void main(String[] args) {
 //		Controller c = new Controller();
@@ -121,7 +124,7 @@ public class Controller {
 			
 			result = stmt.execute();
 			
-			// check if insurt was successful 
+			// check if insert was successful 
 		} catch (SQLException ex) {
 			db.printSQLError(ex);
 		} finally {
@@ -260,6 +263,46 @@ public class Controller {
 		if (zoomNum < 1) {
 			zoomNum = 1;
 		}
+	}
+	
+	public void panUp() {
+
+		BigDecimal plus, empty;
+		plus = new BigDecimal(0.1);  //++0.1
+		empty = new BigDecimal(0); //new center latitude number
+		
+		empty = latNum.max(plus); //latNum = default center latitude number
+		latNum = empty;
+	}
+	public void panDown() {
+
+		BigDecimal minus, empty;
+		minus = new BigDecimal(0.1);  //++0.1
+		empty = new BigDecimal(0); //new center latitude number
+		
+		empty = latNum.subtract(minus); //latNum = default center latitude number
+		latNum = empty;
+	}
+	
+	public void panRight() {
+
+		BigDecimal plus = new BigDecimal(0.1);  //++0.1
+		BigDecimal empty = new BigDecimal(0.0); //new center longitude number
+		
+		empty = lngNum.add(plus); //lngNum=default center longitude number
+		//BigDecimal.valueOf(empty);
+		lngNum = empty;
+		  
+	}
+	public void panLeft() {
+
+		BigDecimal minus = new BigDecimal(0.1);  //--0.1
+		BigDecimal empty = new BigDecimal(0.0); //new center latitude number
+		
+			empty = lngNum.subtract(minus); //lngNum=default center longitude number
+			//BigDecimal.valueOf(empty);
+			lngNum = empty;
+		  
 	}
 	
 	// UPDATE. edit and change a site.
@@ -672,10 +715,11 @@ public class Controller {
 		ArrayList<SiteModel> Sites = getSites();
 		String locat = changeLocation(Sites);
 		zoomNum = 8; //default of the zoom size
+		latNum = new BigDecimal(41.427043);
+		lngNum = new BigDecimal(-84.871626);
 		
 		try {
-			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=BUTLER,IN" 
-		//+ location 
+			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+ latNum +","+ lngNum 
 		+ "&zoom="+zoomNum+"&size=250x250&scale=2&format=png&sensor=false&visible="+ location //if you want to use UTF-8: URLEncoder.encode(location, "UTF-8")
 		+ "&markers=size:tiny%7Ccolor:red%7C" 
 		+ locat;
@@ -701,7 +745,7 @@ public class Controller {
 	
 	//get Image of the static Map
 	public ImageIcon getMap(String location) { //bring the file which was download
-		return new ImageIcon((new ImageIcon(location)).getImage().getScaledInstance(250, 250, java.awt.Image.SCALE_SMOOTH)); //니가 다운로드 해 받은 그 이미지 파일을 가져올 수 있도록 합니다. ctrl shift o, scale smooth라고 힌트를 넣어줌
+		return new ImageIcon((new ImageIcon(location)).getImage().getScaledInstance(250, 250, java.awt.Image.SCALE_SMOOTH)); //bring the map image file. scale smooth is a hint.
 	}
 	
 	public void MapFileDelete(String fileName) {
