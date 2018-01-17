@@ -69,6 +69,7 @@ public class Controller {
 	// call model AND view
 	public Controller() {
 		db = new DbConnect();
+		zoomNum = 8; //default of the zoom size
 	}
 
 	/* CRUD operation for Site */
@@ -671,7 +672,6 @@ public class Controller {
 
 		ArrayList<SiteModel> Sites = getSites();
 		String locat = changeLocation(Sites);
-		zoomNum = 8; //default of the zoom size
 		
 		try {
 			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=BUTLER,IN" 

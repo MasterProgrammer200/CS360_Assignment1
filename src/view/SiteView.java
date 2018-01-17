@@ -14,6 +14,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -37,6 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -118,7 +120,9 @@ public class SiteView extends JFrame{
 	// BuildTitleBarPanel Fields
 	private JPanel titleBarPanel;					//
 	private JLabel titleBarJLabel;					//
-	 
+	private JLabel mapJLabel;
+	
+	
 	 // General
 	private JButtonListener jBL;					//								
 	private ListSelectionListener jLL;				//
@@ -350,7 +354,9 @@ public class SiteView extends JFrame{
 		
 		mapPanel.setBorder(BorderFactory.createTitledBorder("Site Distribution Map"));
 		mapPanel.setPreferredSize(new Dimension(250,250));
-		mapPanel.add(controller.updateMap());
+		
+		mapJLabel = controller.updateMap();
+		mapPanel.add(mapJLabel);
 		
 	}//end BuildMapPanel
 	
@@ -662,10 +668,12 @@ public class SiteView extends JFrame{
 				//Do stuff
 			}
 			else if (command.equals("+")) {
-				//Do stuff
+				controller.ZoomIn();
+				refreshMap();
 			}
 			else if (command.equals("-")) {
-				//Do stuff
+				controller.ZoomOut();
+				refreshMap();
 			}
 			else {
 				System.out.println("Nope");
@@ -710,4 +718,16 @@ public class SiteView extends JFrame{
 		new SiteView();
 	}//end main
 
+	
+	// helper methods
+	private void refreshMap() {
+		Container parent = mapJLabel.getParent();
+		parent.remove(mapJLabel);
+		mapJLabel = controller.updateMap();
+		parent.add(mapJLabel );
+		parent.validate();
+		parent.repaint();
+		
+	}
+	
 }//end class SiteView
