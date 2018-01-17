@@ -107,9 +107,9 @@ public class Controller {
 					+ COLUMN_SHORT_DESC + ", "  
 					+ COLUMN_LOCATION + ", " 
 					+ COLUMN_LATITUDE + ", " 
-					+ COLUMN_LONGITUDE 
+					+ COLUMN_LONGITUDE  + ", " 
 					+ COLUMN_DATE_CREATED + ") "
-					+ "VALUES(?, ?, ?, ?, ?, ?, ?);";
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
 			// initialize the prepare statement, execute it, and
 			// store the result
@@ -121,13 +121,10 @@ public class Controller {
 			stmt.setBigDecimal(5, s.getLat());
 			stmt.setBigDecimal(6, s.getLng());
 			stmt.setDate(7, s.getDateCreated());
-			int count = stmt.executeUpdate();
+			
+			result = stmt.execute();
 			
 			// check if insurt was successful 
-			if (count > 0) {
-				result = true;
-			}
-
 		} catch (SQLException ex) {
 			db.printSQLError(ex);
 		} finally {
