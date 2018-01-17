@@ -71,7 +71,7 @@ public class Controller {
 	
 	// call model AND view
 	public Controller() {
-
+		db = new DbConnect();
 	}
 
 	/* CRUD operation for Site */
