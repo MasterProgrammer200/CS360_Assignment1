@@ -52,7 +52,7 @@ public class Controller {
 
 	private final String TABLE_HISTORY = "history";
 	private final String COLUMN_HISTORY_ID = "id";
-	private final String COLUMN_HISTORY_SITE_NUM = "num";
+	private final String COLUMN_HISTORY_SITE_NUM = "site_num";
 	private final String COLUMN_HISTORY_ACTION = "action";
 	private final String COLUMN_HISTORY_DATE = "date";
 	
@@ -599,31 +599,31 @@ public class Controller {
 	 * @return the resulting String History array
 	 * 
 	 */
-//	public String[] historyArrayListToArray(ArrayList<HistoryModel> historyArrList) {
-//		
-//		///
-//		/// declare local variables
-//		///
-//		String[] strHistoryArray;
-//		
-//		// Initialize local variables
-//		strHistoryArray = new String[historyArrList.size()];	// set array size to that of the array list
-//		
-//		// loop through each item in the array
-//		for (int i = 0; i < strHistoryArray.length; i++) {
-//			
-//			// get the site at the current index
-//			HistoryModel h = historyArrList.get(i);
-//			
-//			// set the current array item with the values at the current site
-//			strHistoryArray[i] = h.getSiteNum()	
-//			
-//		}
-//		
-//		// return the newly created array of string histories
-//		return strHistoryArray;
-//		
-//	}
+	public String[] historyArrayListToArray(ArrayList<HistoryModel> historyArrList) {
+		
+		///
+		/// declare local variables
+		///
+		String[] strHistoryArray;
+		
+		// Initialize local variables
+		strHistoryArray = new String[historyArrList.size()];	// set array size to that of the array list
+		
+		// loop through each item in the array
+		for (int i = 0; i < strHistoryArray.length; i++) {
+			
+			// get the site at the current index
+			HistoryModel h = historyArrList.get(i);
+			
+			// set the current array item with the values at the current site
+			strHistoryArray[i] = "" + h.getDate();
+			
+		}
+		
+		// return the newly created array of string histories
+		return strHistoryArray;
+		
+	}
 	
 	
 	public String changeLocation(ArrayList<SiteModel> strArrList) {
