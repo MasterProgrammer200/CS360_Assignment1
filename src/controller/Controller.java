@@ -491,7 +491,7 @@ public class Controller {
 			conn = db.getRemoteConnection();
 
 			// concatenate select query
-			query = "SELECT * FROM " + TABLE_HISTORY + " WHERE " + COLUMN_HISTORY_SITE_NUM + " = " + " ?;";
+			query = "SELECT * FROM " + TABLE_HISTORY + " WHERE " + COLUMN_HISTORY_SITE_NUM + " = " + "?;";
 
 			// initialize the prepare statement, execute it, and
 			// store the result
