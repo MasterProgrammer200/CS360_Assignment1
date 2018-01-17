@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -39,6 +41,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import controller.Controller;
+import model.HistoryModel;
 import model.SiteModel;
 
 /**
@@ -121,9 +124,8 @@ public class SiteView extends JFrame{
 	private ListSelectionListener jLL;				//
 	private String[] history;						// Array for historyJList
 	private String[] data; 							// Array for siteJList
-
 	private Controller controller;					//
-
+	private DecimalFormat df;
 
 
 	// Constructor
@@ -131,6 +133,8 @@ public class SiteView extends JFrame{
 	 * The constructor for the HomeView Class Creates and configures the Site Manager Application's GUI.
 	 */
 	public SiteView() {
+		
+		 df = new DecimalFormat("");
 		
 		// Retrieve array for siteJList	            
 		controller = new Controller();
@@ -544,7 +548,7 @@ public class SiteView extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 
 			
-			
+			DecimalFormat df = new DecimalFormat("");
 			
 			String command = e.getActionCommand();
 	        System.out.println("Selected: " + command);
@@ -616,12 +620,31 @@ public class SiteView extends JFrame{
 				controller.deleteSite(Integer.parseInt(data[siteSelectorList.getSelectedIndex()]));
 				controller.deleteHistoryItem(Integer.parseInt(data[siteSelectorList.getSelectedIndex()]));
 				controller.updateMap();
-				controller.siteArrayListToArray(controller.getSites());
+				//controller.siteArrayListToArray(controller.getSites());
 				data = controller.siteArrayListToArray(controller.getSites());
 				siteSelectorList.setListData(data);
 			}
 			else if (command.equals("View")) {
-				siteSelectorList.getSelectedValue();
+				
+				// Get Selected SiteModel object
+				SiteModel selectedSite;
+				int siteSelected = Integer.parseInt(data[siteSelectorList.getSelectedIndex()]);
+				selectedSite = controller.getSite(Integer.parseInt(data[siteSelectorList.getSelectedIndex()]));
+				
+				
+				// Update Site Information Panel
+				siteIDNumberTextField.setText(String.valueOf(selectedSite.getNum()));
+	        	siteNameTextField.setText(selectedSite.getName());
+	        	siteLocationTextField.setText(selectedSite.getLoc());
+	        	siteLongitudeTextField.setText(df.format(selectedSite.getLng()));
+	        	siteLattitudeTextField.setText(df.format(selectedSite.getLat()));
+	        	siteDescriptionTextArea.setText(selectedSite.getShortDesc());
+	        	
+	        	// Update History List
+	        	history = null;
+	        	history = controller.historyArrayListToArray(controller.getHistoryItems(siteSelected));
+				historyList.setListData(history);
+				
 			}
 			else if (command.equals("Edit")) {
 				//Do stuff
@@ -636,6 +659,12 @@ public class SiteView extends JFrame{
 				//Do stuff
 			}
 			else if (command.equals("Down")) {
+				//Do stuff
+			}
+			else if (command.equals("+")) {
+				//Do stuff
+			}
+			else if (command.equals("-")) {
 				//Do stuff
 			}
 			else {
