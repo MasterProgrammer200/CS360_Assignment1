@@ -14,27 +14,19 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.ScrollPane;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.time.LocalDate;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -45,9 +37,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -67,6 +58,11 @@ public class SiteView extends JFrame{
 	//private final int WIDTH = 500;  // not used, remove after debugging.
 	//private final int HEIGHT = 500; // not used, remove after debugging.
 	
+	
+	/**
+	 * not Used
+	 */
+	private static final long serialVersionUID = 1L;
 	
 	// BuildDisplayPanel Fields                     
 	private JPanel displayPanel;	                //
@@ -124,7 +120,9 @@ public class SiteView extends JFrame{
 	// BuildTitleBarPanel Fields
 	private JPanel titleBarPanel;					//
 	private JLabel titleBarJLabel;					//
-	 
+	private JLabel mapJLabel;
+	
+	
 	 // General
 	private JButtonListener jBL;					//								
 	private ListSelectionListener jLL;				//
@@ -139,18 +137,17 @@ public class SiteView extends JFrame{
 	 * The constructor for the HomeView Class Creates and configures the Site Manager Application's GUI.
 	 */
 	public SiteView() {
-
+		
 		 df = new DecimalFormat("");
 		
-
 		// Retrieve array for siteJList	            
 		controller = new Controller();
-
-
 		
 		// Retrieve array for siteJList	            
-		data = controller.siteArrayListToArray(controller.getSites()); //------------------>>>>>>>>>>>>>>method call here.
+		data = controller.siteArrayListToArray(controller.getSites()); 
 		history = controller.historyArrayListToArray(controller.getHistoryItems(100)); //------------------>>>>>>>>>>>>>>THIS IS TEMPORARY
+		
+		// Configure Window
 		
 		setTitle("SJRWI Site Manager Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -159,14 +156,15 @@ public class SiteView extends JFrame{
 		
 		// Instantiate Event Listener
 		jBL = new JButtonListener();
+		jLL = new JListListener();
 		
 		// Build All JPanels
-		BuildDisplayPanel();		
-		BuildMapControlPanel(jBL);
-		BuildMapPanel(); 		
-		BuildToolBarPanel(jBL, jLL); 	
-		BuildMenuBar(jBL);			
-		BuildTitleBarPanel();		
+		buildDisplayPanel();		
+		buildMapControlPanel(jBL);
+		buildMapPanel(); 		
+		buildToolBarPanel(jBL, jLL); 	
+		buildMenuBar(jBL);			
+		buildTitleBarPanel();		
 		
 		// Add All JPanels
 		add(displayPanel, BorderLayout.WEST);
@@ -184,9 +182,9 @@ public class SiteView extends JFrame{
 	
 	
 	/**
-	 * BuildDisplayPanel configures the JPanel titled" site information". 
+	 * BuildDisplayPanel creates and configures the JPanel titled "site information". 
 	 */
-	private void BuildDisplayPanel(){
+	private void buildDisplayPanel(){
 		
 		// Local Variables
 		int tFSize = 15; 
@@ -274,7 +272,12 @@ public class SiteView extends JFrame{
 	 
 	
 	
-	private void BuildMapControlPanel(JButtonListener JBL) {
+	/**
+	 * The buildMapControlPanel method creates and configures the JPanel titled "Map Controls".
+	 * 
+	 * @param JBL
+	 */
+	private void buildMapControlPanel(JButtonListener JBL) {
 		
 		// Create and Configure mapControlPanel
 		mapControlPanel = new JPanel();
@@ -344,14 +347,16 @@ public class SiteView extends JFrame{
 	 * @param jBL
 	 * 		The ActionListener for this JPanel.
 	 */
-	private void BuildMapPanel(){
+	private void buildMapPanel(){
 		
 		// Create and Configure mapPanel
 		mapPanel = new JPanel();
 		
 		mapPanel.setBorder(BorderFactory.createTitledBorder("Site Distribution Map"));
 		mapPanel.setPreferredSize(new Dimension(250,250));
-		mapPanel.add(controller.updateMap());
+		
+		mapJLabel = controller.updateMap();
+		mapPanel.add(mapJLabel);
 		
 	}//end BuildMapPanel
 	
@@ -359,13 +364,10 @@ public class SiteView extends JFrame{
 	
 	/**
 	 * BuildToolBarPanel configures the JPanel that provide the GUIs display selector and buttons. Bottom center panel.
-	 * 
-	 * @param jBL
-	 * 		The ActionListener for this JPanel.
 	 * @param jLL 
-	 * 		The ListListener for this JPanel.
+	 * @param jBL 
 	 */
-	private void BuildToolBarPanel(JButtonListener jBL, ListSelectionListener jLL){
+	private void buildToolBarPanel(JButtonListener jBL, ListSelectionListener jLL){
 		
 		// Local Variable
 		boolean enabled = false;
@@ -456,13 +458,34 @@ public class SiteView extends JFrame{
 	
 	
 	
+//	/**
+//	 * Refreshes the siteSelectorPanel to update the component for any changes made by the user.
+//	 */
+//	public void refreshSiteSelectorPanel() {
+//		
+//		siteSelectorList = new JList<String>(data); 
+//		siteSelectorList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+//		siteSelectorList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+//		siteSelectorList.setVisibleRowCount(10);
+//		siteSelectorScrollPane = new JScrollPane(siteSelectorList);
+//		siteSelectorScrollPane.setPreferredSize(new Dimension(200,100));
+//		siteSelectorList.addListSelectionListener(jLL);
+//		siteSelectorList.setToolTipText("Coming Soon!");
+//		
+//		siteSelectorPanel.add(siteSelectorScrollPane);
+//		
+//		
+//	}
+	
+	
+	
 	/**
 	 * BuildMeunBarPanel creates and configures the GUIs menuBar. 
 	 * 
 	 * @param JBL
 	 * 		The ActionListener for this menuBar.
 	 */
-	private void BuildMenuBar(JButtonListener JBL){
+	private void buildMenuBar(JButtonListener JBL){
 		
 		menuBar = new JMenuBar();
 		
@@ -506,7 +529,7 @@ public class SiteView extends JFrame{
 	/**
 	 * BuildTitleBarPanel configures the JPanel that provide the GUIs TitleBar. Top center panel. 
 	 */
-	private void BuildTitleBarPanel(){
+	private void buildTitleBarPanel(){
 		
 		titleBarPanel = new JPanel();
 		titleBarPanel.setBorder(BorderFactory.createTitledBorder(""));
@@ -529,12 +552,13 @@ public class SiteView extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+
 			
 			DecimalFormat df = new DecimalFormat("");
 			
 			String command = e.getActionCommand();
 	        System.out.println("Selected: " + command);
-	        
+			
 	        if (command.equals("Add")) {
 	        	
 	        	// 1. Clear and enable textboxes
@@ -670,7 +694,13 @@ public class SiteView extends JFrame{
 		
 		@Override
 	    public void valueChanged(ListSelectionEvent e) {
-	        
+			
+			// enable Buttons when Selected
+				System.out.println("working");
+				deleteButton.setEnabled(true);
+				editButton.setEnabled(true);
+				viewButton.setEnabled(true);
+				
 		}//end ListSelectionModel
 		
 	}//end JListListener
@@ -681,10 +711,23 @@ public class SiteView extends JFrame{
 	 * The purpose of this method is to instantiate the SiteViewTest class.
 	 * 
 	 * @param args
-	 * 		Not Used.
+	 * 		Not Used
 	 */
 	public static void main(String[] args) {
 		
 		new SiteView();
 	}//end main
+
+	
+	// helper methods
+	private void refreshMap() {
+		Container parent = mapJLabel.getParent();
+		parent.remove(mapJLabel);
+		mapJLabel = controller.updateMap();
+		parent.add(mapJLabel );
+		parent.validate();
+		parent.repaint();
+		
+	}
+	
 }//end class SiteView

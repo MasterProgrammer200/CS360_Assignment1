@@ -716,7 +716,6 @@ public class Controller {
 		ArrayList<SiteModel> Sites = getSites();
 		String locat = changeLocation(Sites);
 
-		zoomNum = 8; //default of the zoom size
 		latNum = new BigDecimal(41.427043);
 		lngNum = new BigDecimal(-84.871626);
 
