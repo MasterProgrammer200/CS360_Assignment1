@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 import model.HistoryModel;
 import model.SiteModel;
 import model.StringHistoryModel;
@@ -631,7 +633,6 @@ public class Controller {
 //	}
 	
 
-	// Ryu
 	public void downloadMap(String location) {
 		/*
 		 Multiple markers at this line
@@ -665,37 +666,33 @@ public class Controller {
 		}
 	}
 	
-	// Ryu
-	//얻어오는 함수
-	
+	//get Image of the static Map
 	public ImageIcon getMap(String location) { //bring the file which was download
 		return new ImageIcon((new ImageIcon(location)).getImage().getScaledInstance(250, 250, java.awt.Image.SCALE_SMOOTH)); //니가 다운로드 해 받은 그 이미지 파일을 가져올 수 있도록 합니다. ctrl shift o, scale smooth라고 힌트를 넣어줌
 	}
 	
-	// Ryu
 	public void MapFileDelete(String fileName) {
 		File f = new File(fileName);
 		f.delete();
 	}
 	
 	// updateMap using GoogleStaticAPI and return to the view
-	// Ryu
-	public void updateMap() {
+	public JLabel updateMap() {
 		Controller googleAPI = new Controller(null, null, null);
 		ArrayList<SiteModel> Sites = getSites();
 		String location = null; 
-		//JLabel googleMap = SiteView.siteLocationLabel; // Declaration by variables 	
+		JLabel googleMap = new JLabel(); // Declaration by variables 	
 		
 		for(SiteModel site : Sites) {
 			location = site.getLat()+ "," + site.getLng(); // latitude , longitude
 		} 
 		
 		googleAPI.downloadMap(location);//Search for the actual address
-		//googleMap = new JLabel(googleAPI.getMap(location)); //Reset to the map you download
+		googleMap = new JLabel(googleAPI.getMap(location)); //Reset to the map you download
 		googleAPI.MapFileDelete(location);//Delete the corresponding image file from the program. 
 		//JLabelPanel.add(siteLocationLabel);// Google Maps are launched in JFrame
+		
+		return googleMap;
 	}
 }
 
-//BuildMapPanel(JButtonListener JBL)
-//BuildMapControlPanel
