@@ -306,9 +306,8 @@ public class Controller {
 			stmt.setBigDecimal(4, s.getLat());
 			stmt.setBigDecimal(5, s.getLng());
 			stmt.setDate(6, s.getDateCreated());
-			stmt.setInt(7, s.getId());
-			rs = stmt.executeQuery();
-			rs.next();
+			stmt.setInt(7, s.getNum());
+			stmt.executeUpdate();
 
 		} catch (SQLException ex) {
 			db.printSQLError(ex);

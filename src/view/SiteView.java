@@ -21,12 +21,14 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -52,81 +54,71 @@ import model.SiteModel;
  */
 public class SiteView extends JFrame{
 
-	// Constants
-	//private final int WIDTH = 500;  // not used, remove after debugging.
-	//private final int HEIGHT = 500; // not used, remove after debugging.
-	
-	
-	/**
-	 * not Used
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	// BuildDisplayPanel Fields                     
-	private JPanel displayPanel;	                //
-	private JPanel displayPanelTop;                 //
-	private JPanel displayPanelBottom;				//
-	private JPanel JLabelPanel;						//
-	private JPanel JTextFieldPanel;					//
-	private JLabel siteIDNumberLabel;				//
-	private JLabel siteLongitudeLabel;				//
-	private JLabel siteLattitudeLabel;				//
-	private JLabel siteLocationLabel;				//
-	private JLabel siteNameLabel;					//
-	private JLabel siteDescriptionLabel;			//
-	private JTextField siteIDNumberTextField;		//
-	private JTextField siteLongitudeTextField;		//
-	private JTextField siteLattitudeTextField;		//
-	private JTextField siteLocationTextField;		//
-	private JTextField siteNameTextField;			//
-	private JScrollPane siteDescriptionScrollPane;	//
-	private JTextArea siteDescriptionTextArea;		//
+	private JPanel displayPanel;	                
+	private JPanel displayPanelTop;                 
+	private JPanel displayPanelBottom;				
+	private JPanel JLabelPanel;						
+	private JPanel JTextFieldPanel;					
+	private JLabel siteIDNumberLabel;				
+	private JLabel siteLongitudeLabel;				
+	private JLabel siteLattitudeLabel;				
+	private JLabel siteLocationLabel;				
+	private JLabel siteNameLabel;					
+	private JLabel siteDescriptionLabel;			
+	private JTextField siteIDNumberTextField;		
+	private JTextField siteLongitudeTextField;		
+	private JTextField siteLattitudeTextField;		
+	private JTextField siteLocationTextField;		
+	private JTextField siteNameTextField;			
+	private JScrollPane siteDescriptionScrollPane;	
+	private JTextArea siteDescriptionTextArea;		
 	 
 	// BuildMapControlPanel Fields
-	private JPanel mapControlPanel;					//
-	private JButton panDownButton;					//
-	private JButton panUpButton;                    //
-	private JButton panLeftButton;                  //
-	private JButton panRightButton;                 //
-	private JButton zoomInButton;                   //
-	private JButton zoomOutButton;                  //
-	private JPanel panPanel;						//
-	private JPanel zoomPanel;						//
-	private JPanel controlsPanel;					//
+	private JPanel mapControlPanel;					
+	private JButton panDownButton;					
+	private JButton panUpButton;                    
+	private JButton panLeftButton;                  
+	private JButton panRightButton;                 
+	private JButton zoomInButton;                   
+	private JButton zoomOutButton;                  
+	private JPanel panPanel;						
+	private JPanel zoomPanel;						
+	private JPanel controlsPanel;					
 	
 	// BuildMapPanel Fields
-	private JPanel mapPanel;						//
-	 
+	private JPanel mapPanel;						
+	private JLabel mapJLabel;
+
 	// BuildToolBarPanel Fields
-	private JPanel toolbarPanel;					//
-	private JPanel historyPanel;					//
-	private JPanel siteSelectorPanel;				//
-	private JButton addButton;						//
-	private JButton deleteButton;                   //
-	private JButton editButton;                     //
-	private JButton viewButton;                     //
-	private JPanel buttonPanel;						//
-	private JScrollPane siteSelectorScrollPane;		//
-	private JScrollPane historyScrollPane;			//
-	private JList<String> siteSelectorList;			//
-	private JList<String> historyList;				//
+	private JPanel toolbarPanel;					
+	private JPanel historyPanel;					
+	private JPanel siteSelectorPanel;				
+	private JButton addButton;						
+	private JButton deleteButton;                   
+	private JButton editButton;                     
+	private JButton viewButton;                     
+	private JPanel buttonPanel;						
+	private JScrollPane siteSelectorScrollPane;		
+	private JScrollPane historyScrollPane;			
+	private JList<String> siteSelectorList;			
+	private JList<String> historyList;				
 	                                                
 	// BuildMenuBarPanel Fields
-	private JMenuBar menuBar;						//
-	
+	private JMenuBar menuBar;						
 
 	// BuildTitleBarPanel Fields
-	private JPanel titleBarPanel;					//
-	private JLabel titleBarJLabel;					//
-	private JLabel mapJLabel;
-	
+	private JPanel titleBarPanel;					
+	private JLabel titleBarJLabel;					
 	
 	 // General
-	private JButtonListener jBL;					//								
-	private ListSelectionListener jLL;				//
-	private String[] history;						// Array for historyJList
-	private String[] data; 							// Array for siteJList
-	private Controller controller;					//
+	private JButtonListener jBL;												
+	private ListSelectionListener jLL;				
+	private String[] history;						// Array for initializing historyJList
+	private String[] data; 							// Array for initializing siteJList 
+	private Controller controller;					
 	private DecimalFormat df;
 
 
@@ -143,7 +135,7 @@ public class SiteView extends JFrame{
 		
 		// Retrieve array for siteJList	            
 		data = controller.siteArrayListToArray(controller.getSites()); 
-		history = controller.historyArrayListToArray(controller.getHistoryItems(100)); //------------------>>>>>>>>>>>>>>THIS IS TEMPORARY
+		history = controller.historyArrayListToArray(controller.getHistoryItems(100)); 
 		
 		// Configure Window
 		
@@ -211,14 +203,6 @@ public class SiteView extends JFrame{
 		siteLocationLabel = new JLabel("Location: ");			
 		siteNameLabel = new JLabel("Site Name: ");				
 		siteDescriptionLabel = new JLabel("Site Description: ");	
-		
-		// Set Tool Tips for JLabels
-		siteIDNumberLabel.setToolTipText("Coming Soon!");
-		siteLongitudeLabel.setToolTipText("Coming Soon!");
-		siteLattitudeLabel.setToolTipText("Coming Soon!");
-		siteLocationLabel.setToolTipText("Coming Soon!");
-		siteNameLabel.setToolTipText("Coming Soon!");
-		siteDescriptionLabel.setToolTipText("Coming Soon!");
 		
 		// Create and Configure JTextFields.
 		siteIDNumberTextField = new JTextField(tFSize);		
@@ -351,9 +335,10 @@ public class SiteView extends JFrame{
 		mapPanel = new JPanel();
 		
 		mapPanel.setBorder(BorderFactory.createTitledBorder("Site Distribution Map"));
-		mapPanel.setPreferredSize(new Dimension(250,250));
+		mapPanel.setPreferredSize(new Dimension(300, 300));
 		
 		mapJLabel = controller.updateMap();
+		mapJLabel.setPreferredSize(new Dimension(300, 300));
 		mapPanel.add(mapJLabel);
 		
 	}//end BuildMapPanel
@@ -408,12 +393,6 @@ public class SiteView extends JFrame{
 		deleteButton.addActionListener(jBL);
 		editButton.addActionListener(jBL);
 		viewButton.addActionListener(jBL); 
-		
-		// Create JButton Tool-tips
-		addButton.setToolTipText("Coming Soon!");
-		deleteButton.setToolTipText("Coming Soon!");
-		editButton.setToolTipText("Coming Soon!");
-		viewButton.setToolTipText("Coming Soon!");
 
 		// Add JButton Sub-panels to buttonPanel
 		buttonPanel.add(addButton);
@@ -432,7 +411,6 @@ public class SiteView extends JFrame{
 		siteSelectorScrollPane = new JScrollPane(siteSelectorList);
 		siteSelectorScrollPane.setPreferredSize(new Dimension(200,100));
 		siteSelectorList.addListSelectionListener(jLL);
-		siteSelectorList.setToolTipText("Coming Soon!");
 		
 		// Create and Configure JList for historyPanel
 		historyList = new JList<String>(history);
@@ -441,7 +419,6 @@ public class SiteView extends JFrame{
 		historyScrollPane = new JScrollPane(historyList);
 		historyScrollPane.setPreferredSize(new Dimension(200, 100));
 		historyList.setEnabled(enabled);
-		historyList.setToolTipText("Coming Soon!");
 		
 		// Add scrollPanes/JLists to their respective panels
 		siteSelectorPanel.add(siteSelectorScrollPane);
@@ -453,27 +430,6 @@ public class SiteView extends JFrame{
 		toolbarPanel.add(controlsPanel);
 		
 	}//end BuildToolBarPanel
-	
-	
-	
-//	/**
-//	 * Refreshes the siteSelectorPanel to update the component for any changes made by the user.
-//	 */
-//	public void refreshSiteSelectorPanel() {
-//		
-//		siteSelectorList = new JList<String>(data); 
-//		siteSelectorList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-//		siteSelectorList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-//		siteSelectorList.setVisibleRowCount(10);
-//		siteSelectorScrollPane = new JScrollPane(siteSelectorList);
-//		siteSelectorScrollPane.setPreferredSize(new Dimension(200,100));
-//		siteSelectorList.addListSelectionListener(jLL);
-//		siteSelectorList.setToolTipText("Coming Soon!");
-//		
-//		siteSelectorPanel.add(siteSelectorScrollPane);
-//		
-//		
-//	}
 	
 	
 	
@@ -547,8 +503,7 @@ public class SiteView extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			
 			String command = e.getActionCommand();
-	        System.out.println("Selected: " + command);
-			
+	        
 	        if (command.equals("Add")) {
 	        	
 	        	// 1. Clear and enable textboxes
@@ -566,7 +521,7 @@ public class SiteView extends JFrame{
 	        	siteLattitudeTextField.setText("");
 	        	siteDescriptionTextArea.setText("");
 	        	
-	        	// 2. button name is switched to delete
+	        	// 2. button name is switched to save
 	        	addButton.setText("Save");
 
 	        } else if (command.equals("Save")) {
@@ -617,6 +572,52 @@ public class SiteView extends JFrame{
 	        	refreshMap();
 	        	
 	        }
+	        else if (command.equals("Enter")){
+	        	// 1. VALIDATE TEXTBOXES
+	        	
+	        	if (!validateInput()) {
+	        		return;
+	        	}
+	        	
+	        	// 2. create the new site
+	        	SiteModel site1 = new SiteModel();
+	        	site1.setNum(Integer.parseInt(siteIDNumberTextField.getText()));
+	        	site1.setName(siteNameTextField.getText());
+	        	site1.setLoc(siteLocationTextField.getText());
+	        	site1.setLng(new BigDecimal(siteLongitudeTextField.getText()));
+	        	site1.setLat(new BigDecimal(siteLattitudeTextField.getText()));
+	        	site1.setShortDesc(siteDescriptionTextArea.getText());
+	        	site1.setDateCreated(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+	        	
+	        	controller.updateSite(site1, site1.getNum());
+	        	
+	        	// 3. Button become exit again 
+	        	siteSelectorList.setEnabled(true);
+	        	editButton.setText("Edit");
+	        	
+	        	// 4. Refresh list box/refresh map/clear text fields/disable text fields
+
+	        	data = controller.siteArrayListToArray(controller.getSites()); 
+	        	siteSelectorList.setListData(data);
+	        	historyList.removeAll();
+	        	
+	        	siteIDNumberTextField.setText("");
+	        	siteNameTextField.setText("");
+	        	siteLocationTextField.setText("");
+	        	siteLongitudeTextField.setText("");
+	        	siteLattitudeTextField.setText("");
+	        	siteDescriptionTextArea.setText("");
+	        	
+	        	siteIDNumberTextField.setEditable(false);
+	        	siteNameTextField.setEditable(false);
+	        	siteLocationTextField.setEditable(false);
+	        	siteLongitudeTextField.setEditable(false);
+	        	siteLattitudeTextField.setEditable(false);
+	        	siteDescriptionTextArea.setEditable(false);
+	        	
+	        	refreshMap();
+	        }
+	        
 			else if (command.equals("Exit")) {
 				System.exit(0);
 			}
@@ -655,7 +656,7 @@ public class SiteView extends JFrame{
 				
 				addButton.setEnabled(false);
 				deleteButton.setEnabled(false);
-				editButton.setText("Save");
+				editButton.setText("Enter");
 				viewButton.setEnabled(false);
 				siteSelectorList.setEnabled(false);
 				
@@ -709,11 +710,17 @@ public class SiteView extends JFrame{
 				refreshMap();
 			}
 			else if (command.equals("Upload")) {
-				
+				JFileChooser jFC = new JFileChooser();
+				int status = jFC.showOpenDialog(null);
+				if (status == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = jFC.getSelectedFile();
+					String filename = selectedFile.getPath();
+					JOptionPane.showMessageDialog(null, "You selected " + filename);
+				}
 				refreshMap();
 			}
 			else {
-				System.out.println("Nope");
+				System.exit(0);
 			} 
 	        
 		}//end actionPerformed
@@ -772,7 +779,7 @@ public class SiteView extends JFrame{
 		String username = JOptionPane.showInputDialog(null, "Please enter your Username");
 		String password = JOptionPane.showInputDialog(null, "Please enter your Password");
 		
-		if (username.equals("1") && password.equals("1")) {
+		if (username.equals("siteadmin") && password.equals("sitepwd123")) {
 			new SiteView();
 		}
 		else {
