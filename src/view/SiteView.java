@@ -647,7 +647,7 @@ public class SiteView extends JFrame{
 	        	siteDescriptionTextArea.setText(selectedSite.getShortDesc());
 	        	
 	        	// Update History List
-	        	history = null;
+
 	        	history = controller.historyArrayListToArray(controller.getHistoryItems(siteSelected));
 				historyList.setListData(history);
 				
