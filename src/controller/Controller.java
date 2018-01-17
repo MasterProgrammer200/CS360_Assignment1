@@ -53,6 +53,7 @@ public class Controller {
 	private final String COLUMN_LOCATION = "loc";
 	private final String COLUMN_LATITUDE = "lat";
 	private final String COLUMN_LONGITUDE = "lng";
+	private final String COLUMN_DATE_CREATED = "date_created";
 
 	private final String TABLE_HISTORY = "history";
 	private final String COLUMN_HISTORY_ID = "id";
@@ -108,8 +109,9 @@ public class Controller {
 					+ COLUMN_SHORT_DESC + ", "  
 					+ COLUMN_LOCATION + ", " 
 					+ COLUMN_LATITUDE + ", " 
-					+ COLUMN_LONGITUDE + ") "
-					+ "VALUES(?, ?, ?, ?, ?, ?);";
+					+ COLUMN_LONGITUDE 
+					+ COLUMN_DATE_CREATED + ") "
+					+ "VALUES(?, ?, ?, ?, ?, ?, ?);";
 
 			// initialize the prepare statement, execute it, and
 			// store the result
@@ -120,6 +122,7 @@ public class Controller {
 			stmt.setString(4, s.getLoc());
 			stmt.setBigDecimal(5, s.getLat());
 			stmt.setBigDecimal(6, s.getLng());
+			stmt.setDate(7, s.getDateCreated());
 			int count = stmt.executeUpdate();
 			
 			// check if insurt was successful 
@@ -179,6 +182,7 @@ public class Controller {
 			result.setLoc(rs.getString(COLUMN_LOCATION));
 			result.setLat(rs.getBigDecimal(COLUMN_LATITUDE));
 			result.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
+			result.setDateCreated(rs.getDate(COLUMN_DATE_CREATED));
 
 		} catch (SQLException ex) {
 			db.printSQLError(ex);
@@ -235,6 +239,7 @@ public class Controller {
 				s.setLoc(rs.getString(COLUMN_LOCATION));
 				s.setLat(rs.getBigDecimal(COLUMN_LATITUDE));
 				s.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
+				s.setDateCreated(rs.getDate(COLUMN_DATE_CREATED));
 				
 				// add the site to the list
 				result.add(s);
@@ -283,6 +288,7 @@ public class Controller {
 			+ COLUMN_LOCATION + " = ?, " 
 			+ COLUMN_LATITUDE + " = ?, "
 			+ COLUMN_LONGITUDE + " = ?, "
+			+ COLUMN_DATE_CREATED + " = ? "
 			+ "WHERE " + COLUMN_SITE_NUM + " = ?;";
 
 			// initialize the prepare statement, execute it, and
@@ -292,17 +298,11 @@ public class Controller {
 			stmt.setString(2, s.getShortDesc());
 			stmt.setString(3, s.getLoc());
 			stmt.setBigDecimal(4, s.getLat());
+			stmt.setBigDecimal(5, s.getLng());
+			stmt.setDate(6, s.getDateCreated());
+			stmt.setInt(7, s.getId());
 			rs = stmt.executeQuery();
 			rs.next();
-
-			// store the result from the database in the site object
-			result.setId(rs.getInt(COLUMN_ID));
-			result.setNum(rs.getInt(COLUMN_SITE_NUM));
-			result.setName(rs.getString(COLUMN_NAME));
-			result.setShortDesc(rs.getString(COLUMN_SHORT_DESC));
-			result.setLoc(rs.getString(COLUMN_LOCATION));
-			result.setLat(rs.getBigDecimal(COLUMN_LATITUDE));
-			result.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
 
 		} catch (SQLException ex) {
 			db.printSQLError(ex);
