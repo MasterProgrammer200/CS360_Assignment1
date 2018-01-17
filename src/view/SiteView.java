@@ -23,7 +23,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -33,17 +32,15 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import controller.Controller;
-import model.HistoryModel;
 import model.SiteModel;
 
 /**
@@ -514,13 +511,8 @@ public class SiteView extends JFrame{
 		// Add JMenu to JMenuBar
 		menuBar.add(fileMenu);
 		
-		
 		// Set to JFrame
 		setJMenuBar(menuBar);
-		
-		
-		
-		
 		
 	}//end BuildMenuBarPanel
 	
@@ -552,9 +544,6 @@ public class SiteView extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
-			
-			DecimalFormat df = new DecimalFormat("");
 			
 			String command = e.getActionCommand();
 	        System.out.println("Selected: " + command);
@@ -595,10 +584,12 @@ public class SiteView extends JFrame{
 	        	
 	        	controller.createSite(site);
 	        	
-	        	// 3. Button becomes add again
+	        	// 3. Buttons become add and exit again respectively
+	        	siteSelectorList.setEnabled(true);
 	        	addButton.setText("Add");
+	        	editButton.setText("Edit");
 	        	
-	        	// 4. Refresh list box/clear text fields/disable text fields
+	        	// 4. Refresh list box/refresh map/clear text fields/disable text fields
 
 	        	data = controller.siteArrayListToArray(controller.getSites()); 
 	        	siteSelectorList.setListData(data);
@@ -618,6 +609,8 @@ public class SiteView extends JFrame{
 	        	siteLattitudeTextField.setEditable(false);
 	        	siteDescriptionTextArea.setEditable(false);
 	        	
+	        	refreshMap();
+	        	
 	        }
 			else if (command.equals("Exit")) {
 				System.exit(0);
@@ -625,7 +618,8 @@ public class SiteView extends JFrame{
 			else if (e.getActionCommand().equals("Delete")) {
 				controller.deleteSite(Integer.parseInt(data[siteSelectorList.getSelectedIndex()]));
 				controller.deleteHistoryItem(Integer.parseInt(data[siteSelectorList.getSelectedIndex()]));
-				controller.updateMap();
+				refreshMap();
+				
 				//controller.siteArrayListToArray(controller.getSites());
 				data = controller.siteArrayListToArray(controller.getSites());
 				siteSelectorList.setListData(data);
@@ -653,7 +647,37 @@ public class SiteView extends JFrame{
 				
 			}
 			else if (command.equals("Edit")) {
-				//Do stuff
+				
+				addButton.setEnabled(false);
+				deleteButton.setEnabled(false);
+				editButton.setText("Save");
+				viewButton.setEnabled(false);
+				siteSelectorList.setEnabled(false);
+				
+				SiteModel selectedSite;
+				int siteSelected = Integer.parseInt(data[siteSelectorList.getSelectedIndex()]);
+				selectedSite = controller.getSite(Integer.parseInt(data[siteSelectorList.getSelectedIndex()]));
+				
+				
+				// Update Site Information Panel
+				siteIDNumberTextField.setText(String.valueOf(selectedSite.getNum()));
+	        	siteNameTextField.setText(selectedSite.getName());
+	        	siteLocationTextField.setText(selectedSite.getLoc());
+	        	siteLongitudeTextField.setText(df.format(selectedSite.getLng()));
+	        	siteLattitudeTextField.setText(df.format(selectedSite.getLat()));
+	        	siteDescriptionTextArea.setText(selectedSite.getShortDesc());
+	        	
+	        	// Update History List
+	        	history = null;
+	        	history = controller.historyArrayListToArray(controller.getHistoryItems(siteSelected));
+				historyList.setListData(history);
+				
+				siteIDNumberTextField.setEditable(false);
+	        	siteNameTextField.setEditable(true);
+	        	siteLocationTextField.setEditable(true);
+	        	siteLongitudeTextField.setEditable(true);
+	        	siteLattitudeTextField.setEditable(true);
+	        	siteDescriptionTextArea.setEditable(true);
 			}
 			else if (command.equals("Up")) {
 				//Do stuff
@@ -673,6 +697,10 @@ public class SiteView extends JFrame{
 			}
 			else if (command.equals("-")) {
 				controller.ZoomOut();
+				refreshMap();
+			}
+			else if (command.equals("Upload")) {
+				
 				refreshMap();
 			}
 			else {
@@ -696,7 +724,8 @@ public class SiteView extends JFrame{
 	    public void valueChanged(ListSelectionEvent e) {
 			
 			// enable Buttons when Selected
-				System.out.println("working");
+			
+				addButton.setEnabled(true);
 				deleteButton.setEnabled(true);
 				editButton.setEnabled(true);
 				viewButton.setEnabled(true);
@@ -704,6 +733,20 @@ public class SiteView extends JFrame{
 		}//end ListSelectionModel
 		
 	}//end JListListener
+	
+	
+	
+		/**
+		 *  Helper method that removes out of date map and adds new map.
+		 */
+	private void refreshMap() {
+		Container parent = mapJLabel.getParent();
+		parent.remove(mapJLabel);
+		mapJLabel = controller.updateMap();
+		parent.add(mapJLabel );
+		parent.validate();
+		parent.repaint();
+	}
 	
 	
 	
@@ -715,19 +758,18 @@ public class SiteView extends JFrame{
 	 */
 	public static void main(String[] args) {
 		
-		new SiteView();
+		
+		// super ultra uncrackable security  
+		String username = JOptionPane.showInputDialog(null, "Please enter your Username");
+		String password = JOptionPane.showInputDialog(null, "Please enter your Password");
+		
+		if (username.equals("1") && password.equals("1")) {
+			new SiteView();
+		}
+		else {
+			System.exit(0);
+		}
+		
 	}//end main
 
-	
-	// helper methods
-	private void refreshMap() {
-		Container parent = mapJLabel.getParent();
-		parent.remove(mapJLabel);
-		mapJLabel = controller.updateMap();
-		parent.add(mapJLabel );
-		parent.validate();
-		parent.repaint();
-		
-	}
-	
 }//end class SiteView
