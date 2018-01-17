@@ -333,7 +333,7 @@ public class Controller {
 			conn = db.getRemoteConnection();
 
 			// concatenate select query
-			query = "DELETE FROM " + TABLE_SITE +  "WHERE " + COLUMN_SITE_NUM + " = ?;";
+			query = "DELETE FROM " + TABLE_SITE +  " WHERE " + COLUMN_SITE_NUM + " = ?;";
 
 			// initialize the prepare statement, execute it, and
 			// store the result
