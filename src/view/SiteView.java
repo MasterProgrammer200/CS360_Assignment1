@@ -37,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -80,27 +81,27 @@ public class SiteView extends JFrame{
 	private JButton panUpButton;                    //
 	private JButton panLeftButton;                  //
 	private JButton panRightButton;                 //
-	private JButton ZoomInButton;                   //
-	private JButton ZoomOutButton;                  //
-	private JPanel panJPanel;						//
-	private JPanel zoomJPanel;						//
+	private JButton zoomInButton;                   //
+	private JButton zoomOutButton;                  //
+	private JPanel panPanel;						//
+	private JPanel zoomPanel;						//
 	
 	// BuildMapPanel Fields
 	private JPanel mapPanel;						//
 	 
 	// BuildToolBarPanel Fields
 	private JPanel toolbarPanel;					//
+	private JPanel historyPanel;					//
+	private JPanel siteSelectorPanel;				//
 	private JButton addButton;						//
 	private JButton deleteButton;                   //
 	private JButton editButton;                     //
 	private JButton viewButton;                     //
-	private JPanel buttonJPanel;					//
-	private JPanel buttonJPanel0;                   //
-	private JPanel buttonJPanel1;                   //
-	private JPanel buttonJPanel2;                   //
-	private JPanel buttonJPanel3;                   //
+	private JPanel buttonPanel;					//
 	private JScrollPane siteSelectorScrollPane;		//
-	private JList siteSelectorList;				    //
+	private JScrollPane historyScrollPane;			//
+	private JList<String> siteSelectorList;				    //
+	private JList<String> historyList;					    //
 	                                                
 	// BuildMenuBarPanel Fields
 	private JMenuBar menuBar;						//
@@ -111,11 +112,15 @@ public class SiteView extends JFrame{
 	private JLabel titleBarJLabel;					//
 	 
 	 // General
-	private JButtonListener jBL;					//
-	String[] data; 									// Array for siteJList.
-	private ListSelectionListener jLL;
+	private JButtonListener jBL;					//								
+	private ListSelectionListener jLL;				//
+	private String[] history;						// Array for historyJList
+	private String[] data; 							// Array for siteJList
+	private JPanel controlsPanel;
 
-    
+
+	
+	
 	
 	// Constructor
 	/**
@@ -124,10 +129,11 @@ public class SiteView extends JFrame{
 	public SiteView() {
 		
 		// Configure Window
-		// setSize(WIDTH, HEIGHT);  				// not used, remove after debugging.
+		// setSize(WIDTH, HEIGHT);  // -----------------------><><><>< Not used, remove after debugging ><><><><><
 		
 		// Retrieve array for siteJList	            
 		data = new String[5]; //------------------>>>>>>>>>>>>>>method call here.
+		history = new String[5]; //------------------>>>>>>>>>>>>>>method call here.
 		
 		setTitle("SJRWI Site Manager Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -184,7 +190,6 @@ public class SiteView extends JFrame{
 		displayPanelBottom.setLayout(new GridLayout(1, 1));
 		JLabelPanel.setLayout(new GridLayout(6, 1));
 		JTextFieldPanel.setLayout(new GridLayout(6, 1));
-		
 		
 		// Create JLabels.
 		siteIDNumberLabel = new JLabel("Site ID#: ");			
@@ -260,16 +265,58 @@ public class SiteView extends JFrame{
 		mapControlPanel.setPreferredSize(new Dimension(150,250));
 		
 		// Create JPanels
-		panJPanel = new JPanel();
-		zoomJPanel = new JPanel();
+		panPanel = new JPanel();
+		zoomPanel = new JPanel();
 		
 		// Configure JPanel Layout Managers
-		panJPanel.setLayout(new GridLayout(2, 2));
-		zoomJPanel.setLayout(new GridLayout(2, 2));
+		panPanel.setLayout(new BorderLayout());
+		zoomPanel.setLayout(new GridLayout(2, 1));
 		
+		// Configure Borders
+		panPanel.setBorder(BorderFactory.createTitledBorder("Pan"));
+		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom"));
 		
-		mapControlPanel.add(new JLabel("Coming Soon!"));
-
+		// Set Size
+		zoomPanel.setPreferredSize(new Dimension(130, 100));
+		
+		// Create and Configure JButtons
+		panUpButton = new JButton("Up");
+		panDownButton = new JButton("Down");
+		panLeftButton = new JButton("Left");
+		panRightButton = new JButton("Right");
+		zoomInButton = new JButton("+");
+		zoomOutButton = new JButton("-");
+		
+		// Add ActionListener
+		panUpButton.addActionListener(jBL);
+		panDownButton.addActionListener(jBL);
+		panLeftButton.addActionListener(jBL);
+		panRightButton.addActionListener(jBL);
+		zoomInButton.addActionListener(jBL);
+		zoomOutButton.addActionListener(jBL);
+			
+		// Add Tool-tips to JButtons
+		zoomInButton.setToolTipText("Zoom In");
+		zoomOutButton.setToolTipText("Zoom Out");
+		panUpButton.setToolTipText("Pan Up");
+		panDownButton.setToolTipText("Pan Down");
+		panLeftButton.setToolTipText("Pan Left");
+		panRightButton.setToolTipText("Pan Right");
+		
+		// Add Pan Buttons to panPanel
+		panPanel.add(panUpButton, BorderLayout.NORTH);
+		panPanel.add(panDownButton, BorderLayout.SOUTH);
+		panPanel.add(panLeftButton, BorderLayout.WEST);
+		panPanel.add(panRightButton, BorderLayout.EAST);
+		
+		// Add Zoom Buttons to zoomButtonPanel
+		zoomPanel.add(zoomInButton);
+		zoomPanel.add(zoomOutButton);
+		
+		// Add zoomPanel and panPanel to mapControlPanel
+		mapControlPanel.add(panPanel);
+		mapControlPanel.add(zoomPanel);
+		
 	}//end BuildMapControlPanel
 	
 	
@@ -303,25 +350,40 @@ public class SiteView extends JFrame{
 		
 		// Local Variable
 		boolean editable = false;
+		boolean enabled = false;
 		
 		// Create and Configure toolBarPanel
 		toolbarPanel = new JPanel();
-		toolbarPanel.setLayout(new GridLayout(1,2));
+		toolbarPanel.setLayout(new GridLayout(1,3));
 		toolbarPanel.setBorder(BorderFactory.createTitledBorder("Dashboard Toolbar"));
-		toolbarPanel.setPreferredSize(new Dimension(250,100)); // w, h
+		toolbarPanel.setPreferredSize(new Dimension(250,150)); // w, h
 		
-		// Create and Configure Button JPanels
-		buttonJPanel = new JPanel();
-		buttonJPanel0 = new JPanel();
-		buttonJPanel1 = new JPanel();
-		buttonJPanel2 = new JPanel();
-		buttonJPanel3 = new JPanel();
+		//Create and Configure HistoryPanel;
+		historyPanel = new JPanel();
+		historyPanel.setBorder(BorderFactory.createTitledBorder("Sample Collection Dates"));
 		
-		// Create JButtons
-		JButton addButton = new JButton("Add");						
-		JButton deleteButton = new JButton("Delete");                   
-		JButton editButton = new JButton("Edit");                     
-		JButton viewButton = new JButton("View"); 
+		//Create and Configure siteSelectorPanel;
+		siteSelectorPanel = new JPanel();
+		siteSelectorPanel.setBorder(BorderFactory.createTitledBorder("Choose a Site to view"));
+		
+		//Create and Configure controlPanel
+		controlsPanel = new JPanel();
+		controlsPanel.setBorder(BorderFactory.createTitledBorder("Select an Operation"));
+		buttonPanel = new JPanel();
+		buttonPanel.setBorder(BorderFactory.createTitledBorder(""));
+		buttonPanel.setPreferredSize(new Dimension(200, 100));
+		buttonPanel.setLayout(new GridLayout(2, 2));
+	
+		// Create and Configure JButtons 
+		addButton = new JButton("Add");						
+		deleteButton = new JButton("Delete");                   
+		editButton = new JButton("Edit");                     
+		viewButton = new JButton("View"); 
+		
+		// set Enabled status of all JButtons except addButton
+		deleteButton.setEnabled(enabled);
+		editButton.setEnabled(enabled);
+		viewButton.setEnabled(enabled);
 		
 		// Add ActionListener to JButtons
 		addButton.addActionListener(jBL);
@@ -334,35 +396,43 @@ public class SiteView extends JFrame{
 		deleteButton.setToolTipText("Coming Soon!");
 		editButton.setToolTipText("Coming Soon!");
 		viewButton.setToolTipText("Coming Soon!");
+
+		// Add JButton Sub-panels to buttonPanel
+		buttonPanel.add(addButton);
+		buttonPanel.add(deleteButton);
+		buttonPanel.add(editButton);
+		buttonPanel.add(viewButton);
 		
-		// Add JButtons to their Respective Sub-panels
-		buttonJPanel0.add(addButton);
-		buttonJPanel1.add(deleteButton);
-		buttonJPanel2.add(editButton);
-		buttonJPanel3.add(viewButton);
+		// Add buttonPanel to controlsPanel
+		controlsPanel.add(buttonPanel);
 		
-		// Add JButton Sub-panels to buttonJPanel
-		buttonJPanel.add(buttonJPanel0);
-		buttonJPanel.add(buttonJPanel1);
-		buttonJPanel.add(buttonJPanel2);
-		buttonJPanel.add(buttonJPanel3);
-		
-		// Create and Configure JList and JScrollPane
-		siteSelectorList = new JList(data); 
+		// Create and Configure JList for siteSelectorPanel
+		siteSelectorList = new JList<String>(data); 
 		siteSelectorList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		siteSelectorList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		siteSelectorList.setVisibleRowCount(-1);
-		JScrollPane siteSelectorScrollPane = new JScrollPane(siteSelectorList);
-		siteSelectorScrollPane.setPreferredSize(new Dimension(80, 80));
-		
-		// Add EventListener
+		siteSelectorList.setVisibleRowCount(10);
+		siteSelectorScrollPane = new JScrollPane(siteSelectorList);
+		siteSelectorScrollPane.setPreferredSize(new Dimension(200,100));
 		siteSelectorList.addListSelectionListener(jLL);
+		siteSelectorList.setToolTipText("Coming Soon!");
 		
+		// Create and Configure JList for historyPanel
+		historyList = new JList<String>(history);
+		historyList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		historyList.setVisibleRowCount(10);
+		historyScrollPane = new JScrollPane(historyList);
+		historyScrollPane.setPreferredSize(new Dimension(200, 100));
+		historyList.setEnabled(enabled);
+		historyList.setToolTipText("Coming Soon!");
+		
+		// Add scrollPanes/JLists to their respective panels
+		siteSelectorPanel.add(siteSelectorScrollPane);
+		historyPanel.add(historyScrollPane);
 		
 		// Add Panels to toolbarPanel
-		toolbarPanel.add(siteSelectorScrollPane);
-		toolbarPanel.add(buttonJPanel);
-		
+		toolbarPanel.add(siteSelectorPanel);
+		toolbarPanel.add(historyPanel);
+		toolbarPanel.add(controlsPanel);
 		
 	}//end BuildToolBarPanel
 	
