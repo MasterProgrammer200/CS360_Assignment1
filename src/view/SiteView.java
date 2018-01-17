@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -570,7 +571,11 @@ public class SiteView extends JFrame{
 
 	        } else if (command.equals("Save")) {
 
-	        	// 1. VALIDATE TEXTBOXES - TODO <---- Nick im leaving this for you
+	        	// 1. VALIDATE TEXTBOXES
+	        	
+	        	if (!validateInput()) {
+	        		return;
+	        	}
 	        	
 	        	// 2. create the new site
 	        	SiteModel site = new SiteModel();
@@ -641,7 +646,7 @@ public class SiteView extends JFrame{
 	        	siteDescriptionTextArea.setText(selectedSite.getShortDesc());
 	        	
 	        	// Update History List
-	        	history = null;
+
 	        	history = controller.historyArrayListToArray(controller.getHistoryItems(siteSelected));
 				historyList.setListData(history);
 				
@@ -680,16 +685,20 @@ public class SiteView extends JFrame{
 	        	siteDescriptionTextArea.setEditable(true);
 			}
 			else if (command.equals("Up")) {
-				//Do stuff
+				controller.panUp();
+				refreshMap();
 			}
 			else if (command.equals("Left")) {
-				//Do stuff
+				controller.panLeft();
+				refreshMap();
 			}
 			else if (command.equals("Right")) {
-				//Do stuff
+				controller.panRight();
+				refreshMap();
 			}
 			else if (command.equals("Down")) {
-				//Do stuff
+				controller.panDown();
+				refreshMap();
 			}
 			else if (command.equals("+")) {
 				controller.ZoomIn();
@@ -772,4 +781,48 @@ public class SiteView extends JFrame{
 		
 	}//end main
 
+
+	private boolean validateInput() {
+		
+		boolean isValid = true;
+		String errMsg = "";
+		
+		try{
+			int num = Integer.parseInt(siteIDNumberTextField.getText());
+		} catch (NumberFormatException e) {
+			errMsg += "Site Number must be an integer\n";
+		}
+		
+		if (siteNameTextField.getText().isEmpty()) {
+			errMsg += "Site Name must contain a value\n";
+		}
+		
+		if (siteLocationTextField.getText().isEmpty()) {
+			errMsg += "Site Location must contain a value\n";
+		}
+		
+		try{
+			BigDecimal num = new BigDecimal(siteLongitudeTextField.getText());
+		} catch (NumberFormatException e) {
+			errMsg += "Site Longitude must be a decimal\n";
+		}
+		
+		try{
+			BigDecimal num = new BigDecimal(siteLongitudeTextField.getText());
+		} catch (NumberFormatException e) {
+			errMsg += "Site Lattitude must be a decimal\n";
+		}
+		
+		if (errMsg != "") {
+			isValid = false;
+			JOptionPane optionPane = new JOptionPane(errMsg, JOptionPane.WARNING_MESSAGE);
+			JDialog dialog = optionPane.createDialog("An Error hath occured.");
+			dialog.setAlwaysOnTop(true); // to show top of all other application
+			dialog.setVisible(true); // to visible the dialog
+		}
+		
+		return isValid;
+		
+	}
+	
 }//end class SiteView
