@@ -122,11 +122,11 @@ public class SiteView extends JFrame{
 	private ListSelectionListener jLL;				//
 	private String[] history;						// Array for historyJList
 	private String[] data; 							// Array for siteJList
+
 	private Controller controller;					//
 
-	
-	
-	
+
+
 	// Constructor
 	/**
 	 * The constructor for the HomeView Class Creates and configures the Site Manager Application's GUI.
@@ -136,10 +136,15 @@ public class SiteView extends JFrame{
 		// Configure Window
 		// setSize(WIDTH, HEIGHT);  // -----------------------><><><>< Not used, remove after debugging ><><><><><
 		
+
 		// Retrieve array for siteJList	            
-		data = new String[5]; //------------------>>>>>>>>>>>>>>method call here.
-		history = new String[5]; //------------------>>>>>>>>>>>>>>method call here.
 		controller = new Controller();
+
+
+		
+		// Retrieve array for siteJList	            
+		data = controller.siteArrayListToArray(controller.getSites()); //------------------>>>>>>>>>>>>>>method call here.
+		history = controller.historyArrayListToArray(controller.getHistoryItems(100)); //------------------>>>>>>>>>>>>>>THIS IS TEMPORARY
 		
 		setTitle("SJRWI Site Manager Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
