@@ -61,19 +61,17 @@ public class Controller {
 	private final String COLUMN_HISTORY_ACTION = "action";
 	private final String COLUMN_HISTORY_DATE = "date";
 	
-	// where the magic happens
-	public static void main(String[] args) {
-		Controller c = new Controller(null, null, null);
-		ArrayList<SiteModel> s = c.getSites();
-		System.out.println(s.toString());
-		//UpdateMap updatemap = new UpdateMap(); 
-	}
+//	// where the magic happens
+//	public static void main(String[] args) {
+//		Controller c = new Controller();
+//		ArrayList<SiteModel> s = c.getSites();
+//		System.out.println(s.toString());
+//		//UpdateMap updatemap = new UpdateMap(); 
+//	}
 	
 	// call model AND view
-	public Controller(SiteModel site, HistoryModel history , SiteView view) {
-		this.site = site;
-		this.history = history; 
-		this.view = view;
+	public Controller() {
+
 	}
 
 	/* CRUD operation for Site */
@@ -678,7 +676,7 @@ public class Controller {
 	
 	// updateMap using GoogleStaticAPI and return to the view
 	public JLabel updateMap() {
-		Controller googleAPI = new Controller(null, null, null);
+		
 		ArrayList<SiteModel> Sites = getSites();
 		String location = null; 
 		JLabel googleMap = new JLabel(); // Declaration by variables 	
@@ -687,9 +685,9 @@ public class Controller {
 			location = site.getLat()+ "," + site.getLng(); // latitude , longitude
 		} 
 		
-		googleAPI.downloadMap(location);//Search for the actual address
-		googleMap = new JLabel(googleAPI.getMap(location)); //Reset to the map you download
-		googleAPI.MapFileDelete(location);//Delete the corresponding image file from the program. 
+		downloadMap(location);//Search for the actual address
+		googleMap = new JLabel(getMap(location)); //Reset to the map you download
+		MapFileDelete(location);//Delete the corresponding image file from the program. 
 		//JLabelPanel.add(siteLocationLabel);// Google Maps are launched in JFrame
 		
 		return googleMap;

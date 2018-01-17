@@ -42,6 +42,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import controller.Controller;
+
 /**
  * The purpose of the SiteView............
  * 
@@ -117,7 +119,7 @@ public class SiteView extends JFrame{
 	private String[] history;						// Array for historyJList
 	private String[] data; 							// Array for siteJList
 	private JPanel controlsPanel;
-
+	private Controller cont;
 
 	
 	
@@ -134,6 +136,8 @@ public class SiteView extends JFrame{
 		// Retrieve array for siteJList	            
 		data = new String[5]; //------------------>>>>>>>>>>>>>>method call here.
 		history = new String[5]; //------------------>>>>>>>>>>>>>>method call here.
+		
+		cont = new Controller();
 		
 		setTitle("SJRWI Site Manager Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -331,9 +335,10 @@ public class SiteView extends JFrame{
 		
 		// Create and Configure mapPanel
 		mapPanel = new JPanel();
+		
 		mapPanel.setBorder(BorderFactory.createTitledBorder("Site Distribution Map"));
 		mapPanel.setPreferredSize(new Dimension(250,250));
-		mapPanel.add(new JLabel("Coming Soon!"));
+		mapPanel.add(cont.updateMap());
 		
 	}//end BuildMapPanel
 	
