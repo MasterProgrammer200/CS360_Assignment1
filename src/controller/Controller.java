@@ -66,7 +66,6 @@ public class Controller {
 //		Controller c = new Controller();
 //		ArrayList<SiteModel> s = c.getSites();
 //		System.out.println(s.toString());
-//		//UpdateMap updatemap = new UpdateMap(); 
 //	}
 	
 	// call model AND view
@@ -251,60 +250,7 @@ public class Controller {
 		// return the site retrieved from the database
 		return result;
 	}
-
-	public void ZoomIn() {
-		zoomNum++;
-		if (zoomNum > 20) {
-			zoomNum = 20;
-		}
-	}
 	
-	public void ZoomOut() {
-		zoomNum--;
-		if (zoomNum < 1) {
-			zoomNum = 1;
-		}
-	}
-	
-	public void panUp() {
-
-		BigDecimal plus, empty;
-		plus = new BigDecimal(0.1);  //++0.1
-		empty = new BigDecimal(0); //new center latitude number
-		
-		empty = latNum.max(plus); //latNum = default center latitude number
-		latNum = empty;
-	}
-	public void panDown() {
-
-		BigDecimal minus, empty;
-		minus = new BigDecimal(0.1);  //++0.1
-		empty = new BigDecimal(0); //new center latitude number
-		
-		empty = latNum.subtract(minus); //latNum = default center latitude number
-		latNum = empty;
-	}
-	
-	public void panRight() {
-
-		BigDecimal plus = new BigDecimal(0.1);  //++0.1
-		BigDecimal empty = new BigDecimal(0.0); //new center longitude number
-		
-		empty = lngNum.add(plus); //lngNum=default center longitude number
-		//BigDecimal.valueOf(empty);
-		lngNum = empty;
-		  
-	}
-	public void panLeft() {
-
-		BigDecimal minus = new BigDecimal(0.1);  //--0.1
-		BigDecimal empty = new BigDecimal(0.0); //new center latitude number
-		
-			empty = lngNum.subtract(minus); //lngNum=default center longitude number
-			//BigDecimal.valueOf(empty);
-			lngNum = empty;
-		  
-	}
 	
 	// UPDATE. edit and change a site.
 	public void updateSite(SiteModel s, int SiteNum) {
@@ -682,99 +628,138 @@ public class Controller {
 		
 	}
 	
+	//when click '+' button in the zoom
+	public void ZoomIn() {
+		zoomNum++;
+		if (zoomNum > 20) { //set a limit size, maximum
+			zoomNum = 20;
+		}
+	}
 	
+	//when click '-' button in the zoom
+	public void ZoomOut() {
+		zoomNum--;
+		if (zoomNum < 1) { //set a limit size, minimum
+			zoomNum = 1;
+		}
+	}
+	
+	//when click 'Up' button of the pan
+	public void panUp() {
+
+		BigDecimal plus, empty;
+		plus = new BigDecimal(0.1);  //++0.1, To increase the latitude number
+		empty = new BigDecimal(0); //new center latitude number
+		
+		empty = latNum.max(plus); //latNum = default center latitude number
+		latNum = empty;
+	}
+	
+	//when click 'Down' button of the pan
+	public void panDown() {
+
+		BigDecimal minus, empty;
+		minus = new BigDecimal(0.1);  //--0.1 , To decrease the latitude number
+		empty = new BigDecimal(0); //new center latitude number
+		
+		empty = latNum.subtract(minus); //latNum = default center latitude number
+		latNum = empty;
+	}
+	
+	//when click 'Right' button of the pan
+	public void panRight() {
+
+		BigDecimal plus = new BigDecimal(0.1);  //++0.1 , To increase the longitude number
+		BigDecimal empty = new BigDecimal(0.0); //new center longitude number
+		
+		empty = lngNum.add(plus); //lngNum=default center longitude number
+		lngNum = empty;
+		  
+	}
+	
+	//when click 'Left' button of the pan
+	public void panLeft() {
+
+		BigDecimal minus = new BigDecimal(0.1);  //--0.1, To decrease the longitude number
+		BigDecimal empty = new BigDecimal(0.0); //new center latitude number
+		
+			empty = lngNum.subtract(minus); //lngNum=default center longitude number
+			lngNum = empty;
+		  
+	}
+	
+	// locate all Markers
 	public String changeLocation(ArrayList<SiteModel> strArrList) {
 		ArrayList<SiteModel> Sites = getSites();
-		String locat = new String(); 
+		String locat = new String(); // save the address and markers' location
 
-		for(int i = 0; i < Sites.size(); i++) {
+		for(int i = 0; i < Sites.size(); i++) { // connect the address of markers
 			locat += "&markers=size:tiny%7Ccolor:red%7C";
-			locat += Sites.get(i).getLat()+ "," + Sites.get(i).getLng(); // latitude , longitude
-			//System.out.print(locat);
+			locat += Sites.get(i).getLat()+ "," + Sites.get(i).getLng(); // output latitude , longitude			
 		} 
 		return locat;
 	}
-		
-		
-/*		String[] loca = null;
-		//int keynum = site.getNum();
-		for (int i = 0; i < strArrList.length; i++) {
-			// set the current array item with the values at the current site
-			loca[i] = site.getLat()+ "," + site.getLng();
-			while (true) {
-				loca[i] += i;
-				i++;
-				System.out.print("&markers=size:tiny%7Ccolor:red%7C" 
-								+ loca);
-				if(loca[i]==null)break;
-			  }
-	}*/
 
-
+	//bring the Map image using google Static Map API
 	public void downloadMap(String location) {
 
 		ArrayList<SiteModel> Sites = getSites();
 		String locat = changeLocation(Sites);
-
-		latNum = new BigDecimal(41.427043);
-		lngNum = new BigDecimal(-84.871626);
-
 		
+		// center = "Butler, Indiana"
+		latNum = new BigDecimal(41.427043); //Initialize the latNum
+		lngNum = new BigDecimal(-84.871626); //Initialize the lngNum
+
 		try {
-			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+ latNum +","+ lngNum 
-		+ "&zoom="+zoomNum+"&size=250x250&scale=2&format=png&sensor=false&visible="+ location //if you want to use UTF-8: URLEncoder.encode(location, "UTF-8")
-		+ "&markers=size:tiny%7Ccolor:red%7C" 
-		+ locat;
+			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+ latNum +","+ lngNum //change the center location for zooming system 
+		+ "&zoom="+zoomNum+"&size=250x250&scale=2&format=png&sensor=false&visible="+ location //if you want to use UTF-8, insert the code 'URLEncoder.encode(location, "UTF-8")'
+		+ "&markers=size:tiny%7Ccolor:red%7C" //set the markers' size and color
+		+ locat; //connect the all markers
 					
-			URL url = new URL(imageURL);
-			InputStream is = url.openStream();
-			OutputStream os = new FileOutputStream(location);
-			byte[] b = new byte[2048];
-			int length;
-			while ((length = is.read(b)) != -1) {
-				os.write(b, 0, length);
-				
+			URL url = new URL(imageURL); //create URL
+			InputStream is = url.openStream();//access the url address
+			OutputStream os = new FileOutputStream(location);// be able to download
+			byte[] b = new byte[2048];//allocate array 'byte' 
+			int end;
+			while ((end = is.read(b)) != -1) { //repeat to read the file until there's no file.
+				os.write(b, 0, end);//download the image file like a map of address what the user wants
 			}
 			is.close();
 			os.close();
 		}
 		catch(Exception exc){
 			exc.printStackTrace(); // Print stack trace and return.
-			System.out.println("Error" + exc);
-			
+			System.out.print("Error!" + exc);
 		}
 	}
 	
-	//get Image of the static Map
+	//get Image of the Google Static Map
 	public ImageIcon getMap(String location) { //bring the file which was download
 		return new ImageIcon((new ImageIcon(location)).getImage().getScaledInstance(250, 250, java.awt.Image.SCALE_SMOOTH)); //bring the map image file. scale smooth is a hint.
 	}
-	
+	//delete Image File of the Google static Map
 	public void MapFileDelete(String fileName) {
-		File f = new File(fileName);
+		File f = new File(fileName); //An abstract representation of file and directory pathnames.
 		f.delete();
 	}
 	
-	// updateMap using GoogleStaticAPI and return to the view
+	// updateMap using GoogleStaticMapAPI and return to the view
 	public JLabel updateMap() {
-		ArrayList<SiteModel> Sites = getSites();
-		String location = new String(); 
-		JLabel googleMap = new JLabel(); // Declaration by variables 	
+		
+		ArrayList<SiteModel> Sites = getSites();//return Sites contents
+		String location = new String(); // location has a string "latitude , longitude"
+		JLabel googleStaticMap = new JLabel(); // Declaration by JLabel variables
 		
 		for(int i = 0; i < Sites.size(); i++) {
 			location = Sites.get(i).getLat()+ "," + Sites.get(i).getLng(); // latitude , longitude
 		} 
 		
 		downloadMap(location);//Search for the actual address
-		googleMap = new JLabel(getMap(location)); //Reset to the map you download
-		MapFileDelete(location);//Delete the corresponding image file from the program. 
-		//JLabelPanel.add(siteLocationLabel);// Google Maps are launched in JFrame
+		googleStaticMap = new JLabel(getMap(location)); //Reset to the map you download
+		MapFileDelete(location);//Delete the corresponding image file from the program. 	
 		
-		
-		
-		return googleMap;
-		
-	
+		return googleStaticMap;
+
 	}
 }
 
