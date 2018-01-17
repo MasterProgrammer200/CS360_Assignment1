@@ -24,6 +24,7 @@ import java.awt.ScrollPane;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -31,7 +32,9 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -87,6 +90,7 @@ public class SiteView extends JFrame{
 	private JButton zoomOutButton;                  //
 	private JPanel panPanel;						//
 	private JPanel zoomPanel;						//
+	private JPanel controlsPanel;					//
 	
 	// BuildMapPanel Fields
 	private JPanel mapPanel;						//
@@ -99,16 +103,16 @@ public class SiteView extends JFrame{
 	private JButton deleteButton;                   //
 	private JButton editButton;                     //
 	private JButton viewButton;                     //
-	private JPanel buttonPanel;					//
+	private JPanel buttonPanel;						//
 	private JScrollPane siteSelectorScrollPane;		//
 	private JScrollPane historyScrollPane;			//
-	private JList<String> siteSelectorList;				    //
-	private JList<String> historyList;					    //
+	private JList<String> siteSelectorList;			//
+	private JList<String> historyList;				//
 	                                                
 	// BuildMenuBarPanel Fields
 	private JMenuBar menuBar;						//
-
 	
+
 	// BuildTitleBarPanel Fields
 	private JPanel titleBarPanel;					//
 	private JLabel titleBarJLabel;					//
@@ -118,8 +122,7 @@ public class SiteView extends JFrame{
 	private ListSelectionListener jLL;				//
 	private String[] history;						// Array for historyJList
 	private String[] data; 							// Array for siteJList
-	private JPanel controlsPanel;
-	private Controller cont;
+	private Controller controller;					//
 
 	
 	
@@ -136,8 +139,7 @@ public class SiteView extends JFrame{
 		// Retrieve array for siteJList	            
 		data = new String[5]; //------------------>>>>>>>>>>>>>>method call here.
 		history = new String[5]; //------------------>>>>>>>>>>>>>>method call here.
-		
-		cont = new Controller();
+		controller = new Controller();
 		
 		setTitle("SJRWI Site Manager Dashboard");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -338,7 +340,7 @@ public class SiteView extends JFrame{
 		
 		mapPanel.setBorder(BorderFactory.createTitledBorder("Site Distribution Map"));
 		mapPanel.setPreferredSize(new Dimension(250,250));
-		mapPanel.add(cont.updateMap());
+		mapPanel.add(controller.updateMap());
 		
 	}//end BuildMapPanel
 	
@@ -350,11 +352,11 @@ public class SiteView extends JFrame{
 	 * @param jBL
 	 * 		The ActionListener for this JPanel.
 	 * @param jLL 
+	 * 		The ListListener for this JPanel.
 	 */
 	private void BuildToolBarPanel(JButtonListener jBL, ListSelectionListener jLL){
 		
 		// Local Variable
-		boolean editable = false;
 		boolean enabled = false;
 		
 		// Create and Configure toolBarPanel
@@ -450,6 +452,41 @@ public class SiteView extends JFrame{
 	 * 		The ActionListener for this menuBar.
 	 */
 	private void BuildMenuBar(JButtonListener JBL){
+		
+		menuBar = new JMenuBar();
+		
+		// Create and Configure JMenu and JMenuItems
+		JMenu fileMenu = new JMenu("File");
+		JMenuItem uploadItem = new JMenuItem("Upload");
+		JMenuItem exitItem = new JMenuItem("Exit");
+		
+		// Add Mnemonic to JMenu Components
+		fileMenu.setMnemonic(KeyEvent.VK_F);
+		uploadItem.setMnemonic(KeyEvent.VK_U);
+		exitItem.setMnemonic(KeyEvent.VK_E);
+		
+		// Add Tool-tips
+		uploadItem.setToolTipText("Import From file");
+		exitItem.setToolTipText("Exit Program");
+		
+		// Add ActionListener to JMenuItems
+		uploadItem.addActionListener(jBL);
+		exitItem.addActionListener(jBL);
+		
+		// Add JMenuItems to JMenu
+		fileMenu.add(uploadItem);
+		fileMenu.add(exitItem);
+		
+		// Add JMenu to JMenuBar
+		menuBar.add(fileMenu);
+		
+		
+		// Set to JFrame
+		setJMenuBar(menuBar);
+		
+		
+		
+		
 		
 	}//end BuildMenuBarPanel
 	
