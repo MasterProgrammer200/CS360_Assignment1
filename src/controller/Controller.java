@@ -56,6 +56,8 @@ public class Controller {
 	private final String COLUMN_HISTORY_ACTION = "action";
 	private final String COLUMN_HISTORY_DATE = "date";
 	
+	private int zoomNum;
+	
 //	// where the magic happens
 //	public static void main(String[] args) {
 //		Controller c = new Controller();
@@ -246,6 +248,20 @@ public class Controller {
 		return result;
 	}
 
+	public void ZoomIn() {
+		zoomNum++;
+		if (zoomNum > 20) {
+			zoomNum = 20;
+		}
+	}
+	
+	public void ZoomOut() {
+		zoomNum--;
+		if (zoomNum < 1) {
+			zoomNum = 1;
+		}
+	}
+	
 	// UPDATE. edit and change a site.
 	public void updateSite(SiteModel s, int SiteNum) {
 
@@ -390,7 +406,7 @@ public class Controller {
 
 			int count = stmt.executeUpdate();
 			
-			// check if insurt was successful 
+			// check if insert was successful 
 			if (count > 0) {
 				result = true;
 			}
@@ -523,7 +539,7 @@ public class Controller {
 	 * 
 	 * @param history : the history item whose date we should compare
 	 * 
-	 * @return wether the history item is older than three months
+	 * @return whether the history item is older than three months
 	 * 
 	 */
 	public boolean checkHistory(HistoryModel history) {
@@ -531,7 +547,7 @@ public class Controller {
 		///
 		/// declare local variables
 		///
-		boolean isOlderThan3Months;	// holds wether the history item is older than three months
+		boolean isOlderThan3Months;	// holds whether the history item is older than three months
 		LocalDate historyDate;		// holds the history date
 		
 		// initialize variables
@@ -652,25 +668,18 @@ public class Controller {
 
 
 	public void downloadMap(String location) {
-		/*
-		 Multiple markers at this line
-		- Cannot make a static reference to the non-static method getLng() from the type 
-		 SiteModel
-		- Type mismatch: cannot convert from BigDecimal to long
-		*/
+
 		ArrayList<SiteModel> Sites = getSites();
 		String locat = changeLocation(Sites);
+		zoomNum = 8; //default of the zoom size
 		
 		try {
 			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=BUTLER,IN" 
 		//+ location 
-		+ "&zoom=8&size=250x250&scale=2&format=png&sensor=false&visible="+ location //if you want to use UTF-8: URLEncoder.encode(location, "UTF-8")
+		+ "&zoom="+zoomNum+"&size=250x250&scale=2&format=png&sensor=false&visible="+ location //if you want to use UTF-8: URLEncoder.encode(location, "UTF-8")
 		+ "&markers=size:tiny%7Ccolor:red%7C" 
 		+ locat;
-		
-		
-
-			
+					
 			URL url = new URL(imageURL);
 			InputStream is = url.openStream();
 			OutputStream os = new FileOutputStream(location);
