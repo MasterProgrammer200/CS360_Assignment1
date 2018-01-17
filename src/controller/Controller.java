@@ -72,6 +72,7 @@ public class Controller {
 	// call model AND view
 	public Controller() {
 		db = new DbConnect();
+		zoomNum = 8; //default of the zoom size
 	}
 
 	/* CRUD operation for Site */
@@ -384,7 +385,7 @@ public class Controller {
 			conn = db.getRemoteConnection();
 
 			// concatenate select query
-			query = "DELETE FROM " + TABLE_SITE +  "WHERE " + COLUMN_SITE_NUM + " = ?;";
+			query = "DELETE FROM " + TABLE_SITE +  " WHERE " + COLUMN_SITE_NUM + " = ?;";
 
 			// initialize the prepare statement, execute it, and
 			// store the result
@@ -714,9 +715,11 @@ public class Controller {
 
 		ArrayList<SiteModel> Sites = getSites();
 		String locat = changeLocation(Sites);
+
 		zoomNum = 8; //default of the zoom size
 		latNum = new BigDecimal(41.427043);
 		lngNum = new BigDecimal(-84.871626);
+
 		
 		try {
 			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+ latNum +","+ lngNum 
