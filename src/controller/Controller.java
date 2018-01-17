@@ -653,7 +653,7 @@ public class Controller {
 		plus = new BigDecimal(0.1);  //++0.1, To increase the latitude number
 		empty = new BigDecimal(0); //new center latitude number
 		
-		empty = latNum.max(plus); //latNum = default center latitude number
+		empty = latNum.add(plus); //latNum = default center latitude number
 		latNum = empty;
 	}
 	
