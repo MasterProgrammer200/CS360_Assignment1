@@ -17,25 +17,20 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-
-import model.HistoryModel;
-import model.SiteModel;
-import model.StringHistoryModel;
-import model.StringSiteModel;
-import view.SiteView;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.time.LocalDate;
-
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 import model.DbConnect;
+import model.HistoryModel;
+import model.SiteModel;
+import view.SiteView;
 
 
 public class Controller {
@@ -60,6 +55,8 @@ public class Controller {
 	private final String COLUMN_HISTORY_SITE_NUM = "site_num";
 	private final String COLUMN_HISTORY_ACTION = "action";
 	private final String COLUMN_HISTORY_DATE = "date";
+	
+	private int zoomNum;
 	
 //	// where the magic happens
 //	public static void main(String[] args) {
@@ -107,9 +104,9 @@ public class Controller {
 					+ COLUMN_SHORT_DESC + ", "  
 					+ COLUMN_LOCATION + ", " 
 					+ COLUMN_LATITUDE + ", " 
-					+ COLUMN_LONGITUDE 
+					+ COLUMN_LONGITUDE  + ", " 
 					+ COLUMN_DATE_CREATED + ") "
-					+ "VALUES(?, ?, ?, ?, ?, ?, ?);";
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
 			// initialize the prepare statement, execute it, and
 			// store the result
@@ -121,13 +118,10 @@ public class Controller {
 			stmt.setBigDecimal(5, s.getLat());
 			stmt.setBigDecimal(6, s.getLng());
 			stmt.setDate(7, s.getDateCreated());
-			int count = stmt.executeUpdate();
+			
+			result = stmt.execute();
 			
 			// check if insurt was successful 
-			if (count > 0) {
-				result = true;
-			}
-
 		} catch (SQLException ex) {
 			db.printSQLError(ex);
 		} finally {
@@ -254,6 +248,20 @@ public class Controller {
 		return result;
 	}
 
+	public void ZoomIn() {
+		zoomNum++;
+		if (zoomNum > 20) {
+			zoomNum = 20;
+		}
+	}
+	
+	public void ZoomOut() {
+		zoomNum--;
+		if (zoomNum < 1) {
+			zoomNum = 1;
+		}
+	}
+	
 	// UPDATE. edit and change a site.
 	public void updateSite(SiteModel s, int SiteNum) {
 
@@ -398,7 +406,7 @@ public class Controller {
 
 			int count = stmt.executeUpdate();
 			
-			// check if insurt was successful 
+			// check if insert was successful 
 			if (count > 0) {
 				result = true;
 			}
@@ -531,7 +539,7 @@ public class Controller {
 	 * 
 	 * @param history : the history item whose date we should compare
 	 * 
-	 * @return wether the history item is older than three months
+	 * @return whether the history item is older than three months
 	 * 
 	 */
 	public boolean checkHistory(HistoryModel history) {
@@ -539,7 +547,7 @@ public class Controller {
 		///
 		/// declare local variables
 		///
-		boolean isOlderThan3Months;	// holds wether the history item is older than three months
+		boolean isOlderThan3Months;	// holds whether the history item is older than three months
 		LocalDate historyDate;		// holds the history date
 		
 		// initialize variables
@@ -630,21 +638,48 @@ public class Controller {
 		
 	}
 	
+	
+	public String changeLocation(ArrayList<SiteModel> strArrList) {
+		ArrayList<SiteModel> Sites = getSites();
+		String locat = new String(); 
+
+		for(int i = 0; i < Sites.size(); i++) {
+			locat += "&markers=size:tiny%7Ccolor:red%7C";
+			locat += Sites.get(i).getLat()+ "," + Sites.get(i).getLng(); // latitude , longitude
+			//System.out.print(locat);
+		} 
+		return locat;
+	}
+		
+		
+/*		String[] loca = null;
+		//int keynum = site.getNum();
+		for (int i = 0; i < strArrList.length; i++) {
+			// set the current array item with the values at the current site
+			loca[i] = site.getLat()+ "," + site.getLng();
+			while (true) {
+				loca[i] += i;
+				i++;
+				System.out.print("&markers=size:tiny%7Ccolor:red%7C" 
+								+ loca);
+				if(loca[i]==null)break;
+			  }
+	}*/
+
 
 	public void downloadMap(String location) {
-		/*
-		 Multiple markers at this line
-		- Cannot make a static reference to the non-static method getLng() from the type 
-		 SiteModel
-		- Type mismatch: cannot convert from BigDecimal to long
-		*/
+
+		ArrayList<SiteModel> Sites = getSites();
+		String locat = changeLocation(Sites);
+		zoomNum = 8; //default of the zoom size
+		
 		try {
-			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=FortWayne" 
+			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center=BUTLER,IN" 
 		//+ location 
-		+ "&zoom=9&size=250x250&scale=2&format=png&visible="+location //if you want to use UTF-8: URLEncoder.encode(location, "UTF-8")
+		+ "&zoom="+zoomNum+"&size=250x250&scale=2&format=png&sensor=false&visible="+ location //if you want to use UTF-8: URLEncoder.encode(location, "UTF-8")
 		+ "&markers=size:tiny%7Ccolor:red%7C" 
-		+ location +"&sensor=false"; 
-			
+		+ locat;
+					
 			URL url = new URL(imageURL);
 			InputStream is = url.openStream();
 			OutputStream os = new FileOutputStream(location);
@@ -676,13 +711,12 @@ public class Controller {
 	
 	// updateMap using GoogleStaticAPI and return to the view
 	public JLabel updateMap() {
-		
 		ArrayList<SiteModel> Sites = getSites();
-		String location = null; 
+		String location = new String(); 
 		JLabel googleMap = new JLabel(); // Declaration by variables 	
 		
-		for(SiteModel site : Sites) {
-			location = site.getLat()+ "," + site.getLng(); // latitude , longitude
+		for(int i = 0; i < Sites.size(); i++) {
+			location = Sites.get(i).getLat()+ "," + Sites.get(i).getLng(); // latitude , longitude
 		} 
 		
 		downloadMap(location);//Search for the actual address
@@ -690,7 +724,11 @@ public class Controller {
 		MapFileDelete(location);//Delete the corresponding image file from the program. 
 		//JLabelPanel.add(siteLocationLabel);// Google Maps are launched in JFrame
 		
+		
+		
 		return googleMap;
+		
+	
 	}
 }
 

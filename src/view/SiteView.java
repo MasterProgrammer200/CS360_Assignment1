@@ -20,7 +20,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-
+import java.math.BigDecimal;
+import java.util.Calendar;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,6 +39,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import controller.Controller;
+import model.SiteModel;
 
 /**
  * The purpose of the SiteView............
@@ -540,8 +542,74 @@ public class SiteView extends JFrame{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+
 			
-			if (e.getActionCommand().equals("Exit")) {
+			
+			
+			String command = e.getActionCommand();
+	        System.out.println("Selected: " + command);
+			
+	        if (command.equals("Add")) {
+	        	
+	        	// 1. Clear and enable textboxes
+	        	siteIDNumberTextField.setEditable(true);
+	        	siteNameTextField.setEditable(true);
+	        	siteLocationTextField.setEditable(true);
+	        	siteLongitudeTextField.setEditable(true);
+	        	siteLattitudeTextField.setEditable(true);
+	        	siteDescriptionTextArea.setEditable(true);
+	        	
+	        	siteIDNumberTextField.setText("");
+	        	siteNameTextField.setText("");
+	        	siteLocationTextField.setText("");
+	        	siteLongitudeTextField.setText("");
+	        	siteLattitudeTextField.setText("");
+	        	siteDescriptionTextArea.setText("");
+	        	
+	        	// 2. button name is switched to delete
+	        	addButton.setText("Save");
+
+	        } else if (command.equals("Save")) {
+
+	        	// 1. VALIDATE TEXTBOXES - TODO <---- Nick im leaving this for you
+	        	
+	        	// 2. create the new site
+	        	SiteModel site = new SiteModel();
+	        	site.setNum(Integer.parseInt(siteIDNumberTextField.getText()));
+	        	site.setName(siteNameTextField.getText());
+	        	site.setLoc(siteLocationTextField.getText());
+	        	site.setLng(new BigDecimal(siteLongitudeTextField.getText()));
+	        	site.setLat(new BigDecimal(siteLattitudeTextField.getText()));
+	        	site.setShortDesc(siteDescriptionTextArea.getText());
+	        	site.setDateCreated(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+	        	
+	        	controller.createSite(site);
+	        	
+	        	// 3. Button becomes add again
+	        	addButton.setText("Add");
+	        	
+	        	// 4. Refresh list box/clear text fields/disable text fields
+
+	        	data = controller.siteArrayListToArray(controller.getSites()); 
+	        	siteSelectorList.setListData(data);
+	        	historyList.removeAll();
+	        	
+	        	siteIDNumberTextField.setText("");
+	        	siteNameTextField.setText("");
+	        	siteLocationTextField.setText("");
+	        	siteLongitudeTextField.setText("");
+	        	siteLattitudeTextField.setText("");
+	        	siteDescriptionTextArea.setText("");
+	        	
+	        	siteIDNumberTextField.setEditable(false);
+	        	siteNameTextField.setEditable(false);
+	        	siteLocationTextField.setEditable(false);
+	        	siteLongitudeTextField.setEditable(false);
+	        	siteLattitudeTextField.setEditable(false);
+	        	siteDescriptionTextArea.setEditable(false);
+	        	
+	        }
+			else if (command.equals("Exit")) {
 				System.exit(0);
 			}
 			else if (e.getActionCommand().equals("Delete")) {
@@ -552,28 +620,28 @@ public class SiteView extends JFrame{
 				data = controller.siteArrayListToArray(controller.getSites());
 				siteSelectorList.setListData(data);
 			}
-			else if (e.getActionCommand().equals("View")) {
+			else if (command.equals("View")) {
 				siteSelectorList.getSelectedValue();
 			}
-			else if (e.getActionCommand().equals("Edit")) {
+			else if (command.equals("Edit")) {
 				//Do stuff
 			}
-			else if (e.getActionCommand().equals("Up")) {
+			else if (command.equals("Up")) {
 				//Do stuff
 			}
-			else if (e.getActionCommand().equals("Left")) {
+			else if (command.equals("Left")) {
 				//Do stuff
 			}
-			else if (e.getActionCommand().equals("Right")) {
+			else if (command.equals("Right")) {
 				//Do stuff
 			}
-			else if (e.getActionCommand().equals("Down")) {
+			else if (command.equals("Down")) {
 				//Do stuff
 			}
 			else {
 				System.out.println("Nope");
-			}
-			
+			} 
+	        
 		}//end actionPerformed
 		
 	}//end ActionListener 
