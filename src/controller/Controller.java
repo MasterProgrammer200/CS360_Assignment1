@@ -72,6 +72,8 @@ public class Controller {
 	public Controller() {
 		db = new DbConnect();
 		zoomNum = 8; //default of the zoom size
+		latNum = new BigDecimal(41.427043);
+		lngNum = new BigDecimal(-84.871626);
 	}
 
 	/* CRUD operation for Site */
@@ -705,10 +707,6 @@ public class Controller {
 
 		ArrayList<SiteModel> Sites = getSites();
 		String locat = changeLocation(Sites);
-		
-		// center = "Butler, Indiana"
-		latNum = new BigDecimal(41.427043); //Initialize the latNum
-		lngNum = new BigDecimal(-84.871626); //Initialize the lngNum
 
 		try {
 			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+ latNum +","+ lngNum //change the center location for zooming system 
