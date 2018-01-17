@@ -73,6 +73,8 @@ public class Controller {
 	public Controller() {
 		db = new DbConnect();
 		zoomNum = 8; //default of the zoom size
+		latNum = new BigDecimal(41.427043);
+		lngNum = new BigDecimal(-84.871626);
 	}
 
 	/* CRUD operation for Site */
@@ -272,7 +274,7 @@ public class Controller {
 		plus = new BigDecimal(0.1);  //++0.1
 		empty = new BigDecimal(0); //new center latitude number
 		
-		empty = latNum.max(plus); //latNum = default center latitude number
+		empty = latNum.add(plus); //latNum = default center latitude number
 		latNum = empty;
 	}
 	public void panDown() {
@@ -715,11 +717,6 @@ public class Controller {
 
 		ArrayList<SiteModel> Sites = getSites();
 		String locat = changeLocation(Sites);
-
-
-		latNum = new BigDecimal(41.427043);
-		lngNum = new BigDecimal(-84.871626);
-
 		
 		try {
 			String imageURL = "https://maps.googleapis.com/maps/api/staticmap?center="+ latNum +","+ lngNum 

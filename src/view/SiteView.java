@@ -662,16 +662,20 @@ public class SiteView extends JFrame{
 				//Do stuff
 			}
 			else if (command.equals("Up")) {
-				//Do stuff
+				controller.panUp();
+				refreshMap();
 			}
 			else if (command.equals("Left")) {
-				//Do stuff
+				controller.panLeft();
+				refreshMap();
 			}
 			else if (command.equals("Right")) {
-				//Do stuff
+				controller.panRight();
+				refreshMap();
 			}
 			else if (command.equals("Down")) {
-				//Do stuff
+				controller.panDown();
+				refreshMap();
 			}
 			else if (command.equals("+")) {
 				controller.ZoomIn();
