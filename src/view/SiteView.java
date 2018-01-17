@@ -27,12 +27,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -581,7 +583,11 @@ public class SiteView extends JFrame{
 
 	        } else if (command.equals("Save")) {
 
-	        	// 1. VALIDATE TEXTBOXES - TODO <---- Nick im leaving this for you
+	        	// 1. VALIDATE TEXTBOXES
+	        	
+	        	if (!validateInput()) {
+	        		return;
+	        	}
 	        	
 	        	// 2. create the new site
 	        	SiteModel site = new SiteModel();
@@ -727,6 +733,49 @@ public class SiteView extends JFrame{
 		parent.add(mapJLabel );
 		parent.validate();
 		parent.repaint();
+		
+	}
+	
+	private boolean validateInput() {
+		
+		boolean isValid = true;
+		String errMsg = "";
+		
+		try{
+			int num = Integer.parseInt(siteIDNumberTextField.getText());
+		} catch (NumberFormatException e) {
+			errMsg += "Site Number must be an integer\n";
+		}
+		
+		if (siteNameTextField.getText().isEmpty()) {
+			errMsg += "Site Name must contain a value\n";
+		}
+		
+		if (siteLocationTextField.getText().isEmpty()) {
+			errMsg += "Site Location must contain a value\n";
+		}
+		
+		try{
+			BigDecimal num = new BigDecimal(siteLongitudeTextField.getText());
+		} catch (NumberFormatException e) {
+			errMsg += "Site Longitude must be a decimal\n";
+		}
+		
+		try{
+			BigDecimal num = new BigDecimal(siteLongitudeTextField.getText());
+		} catch (NumberFormatException e) {
+			errMsg += "Site Lattitude must be a decimal\n";
+		}
+		
+		if (errMsg != "") {
+			isValid = false;
+			JOptionPane optionPane = new JOptionPane(errMsg, JOptionPane.WARNING_MESSAGE);
+			JDialog dialog = optionPane.createDialog("An Error hath occured.");
+			dialog.setAlwaysOnTop(true); // to show top of all other application
+			dialog.setVisible(true); // to visible the dialog
+		}
+		
+		return isValid;
 		
 	}
 	
