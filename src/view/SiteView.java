@@ -635,7 +635,7 @@ public class SiteView extends JFrame{
 				SiteModel selectedSite;
 				int siteSelected = Integer.parseInt(data[siteSelectorList.getSelectedIndex()]);
 				selectedSite = controller.getSite(Integer.parseInt(data[siteSelectorList.getSelectedIndex()]));
-				
+				refreshMap();
 				
 				// Update Site Information Panel
 				siteIDNumberTextField.setText(String.valueOf(selectedSite.getNum()));

@@ -180,15 +180,23 @@ public class Controller {
 			result.setLat(rs.getBigDecimal(COLUMN_LATITUDE));
 			result.setLng(rs.getBigDecimal(COLUMN_LONGITUDE));
 			result.setDateCreated(rs.getDate(COLUMN_DATE_CREATED));
-
+			
+			//change the center address
+			latNum = result.getLat();
+			lngNum = result.getLng();
+			zoomNum = 13;
+			
 		} catch (SQLException ex) {
 			db.printSQLError(ex);
 		} finally {
 			db.closeConnection(conn);
 		}
 
+
 		// return the site retrieved from the database
 		return result;
+		
+		
 	}
 
 	// READ. browse sites. return all the 'sites' which is an array of site objects
